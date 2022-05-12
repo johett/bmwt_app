@@ -24,8 +24,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.green,
       ),
-      home: const MyHomePage(
-          title: 'Hello my friends, I am testing the git functions'),
+      home: const MyHomePage(title: 'Hello, I am testing the git functions'),
     );
   }
 }
