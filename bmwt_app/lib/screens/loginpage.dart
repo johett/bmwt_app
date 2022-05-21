@@ -1,3 +1,5 @@
+import 'package:bmwt_app/utility/credentials.dart';
+import 'package:fitbitter/fitbitter.dart';
 import 'package:flutter/material.dart';
 import 'package:bmwt_app/screens/homepage.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -40,10 +42,19 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: ElevatedButton(
           onPressed: () async{
-          final sp = await SharedPreferences.getInstance();
-          sp.setString('username', 'userID');
-          Navigator.of(context).pushReplacementNamed(HomePage.route);
-        },child: Text('Authenticate'),),
+          String? userId = await FitbitConnector.authorize(
+            context: context,
+            clientID: FitbitAppCredentials.clientID,
+            clientSecret: FitbitAppCredentials.clientSecret,
+            redirectUri: FitbitAppCredentials.redirectUri,
+            callbackUrlScheme: FitbitAppCredentials.callbackUrlScheme,
+            );
+          if(userId!=null){
+            final sp = await SharedPreferences.getInstance();
+            sp.setString('username', userId);
+            Navigator.of(context).pushReplacementNamed(HomePage.route);
+          }
+        },child: Text('Login'),),
       ),
     );
   } } //Page
