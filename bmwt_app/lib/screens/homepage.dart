@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:bmwt_app/screens/loginpage.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bmwt_app/screens/caloriesWSpage.dart';
+import 'package:bmwt_app/screens/function1page.dart';
+import 'package:bmwt_app/screens/function2page.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -19,7 +22,29 @@ class HomePage extends StatelessWidget {
         title: Text(HomePage.routename),
       ),
       body: Center(
-        child: Text('Home page'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, CaloriesWSPage.route);
+              }, 
+              child: Text('To caloriesWS page'),
+              ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, Function1Page.route);
+              }, 
+              child: Text('Function 1'),
+              ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, Function2Page.route);
+              }, 
+              child: Text('Function 2'),
+              )
+          ],
+        ),
         ),
       drawer: Drawer(
         child: ListView(

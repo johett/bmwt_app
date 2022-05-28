@@ -1,9 +1,31 @@
 import 'package:bmwt_app/screens/homepage.dart';
 import 'package:bmwt_app/screens/loginpage.dart';
+import 'package:bmwt_app/screens/caloriesWSpage.dart';
+import 'package:bmwt_app/screens/function1page.dart';
+import 'package:bmwt_app/screens/function2page.dart';
 import 'package:flutter/material.dart';
+import 'package:bmwt_app/database/database.dart';
+import 'package:bmwt_app/repositories/databaseRepository.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async{
+  //This is a special method that use WidgetFlutterBinding to interact with the Flutter engine.
+  //This is needed when you need to interact with the native core of the app.
+  //Here, we need it since when need to initialize the DB before running the app.
+  WidgetsFlutterBinding.ensureInitialized();
+
+  //This opens the database.
+  final AppDatabase database =
+      await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+  //This creates a new DatabaseRepository from the AppDatabase instance just initialized
+  final databaseRepository = DatabaseRepository(database: database);
+  
+  //Here, we run the app and we provide to the whole widget tree the instance of the DatabaseRepository.
+  //That instance will be then shared through the platform and will be unique.
+  runApp(ChangeNotifierProvider<DatabaseRepository>(
+    create: (context) => databaseRepository,
+    child: MyApp(),
+  ));
 } //main
 
 class MyApp extends StatelessWidget {
@@ -19,6 +41,9 @@ class MyApp extends StatelessWidget {
         routes: {
           LoginPage.route: (context) => LoginPage(),
           HomePage.route: (context) => HomePage(),
+          CaloriesWSPage.route: (context) => CaloriesWSPage(),
+          Function1Page.route: (context) => Function1Page(),
+          Function2Page.route: (context) => Function2Page(),
         },
     );
   } //build
