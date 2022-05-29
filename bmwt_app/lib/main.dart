@@ -1,6 +1,8 @@
 import 'package:bmwt_app/screens/homepage.dart';
 import 'package:bmwt_app/screens/loginpage.dart';
+import 'package:bmwt_app/screens/calorieshomepage.dart';
 import 'package:bmwt_app/screens/caloriesWSpage.dart';
+import 'package:bmwt_app/screens/caloriesDaypage.dart';
 import 'package:bmwt_app/screens/function1page.dart';
 import 'package:bmwt_app/screens/function2page.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +43,9 @@ class MyApp extends StatelessWidget {
         routes: {
           LoginPage.route: (context) => LoginPage(),
           HomePage.route: (context) => HomePage(),
+          CaloriesHomePage.route: (context) => CaloriesHomePage(),
           CaloriesWSPage.route: (context) => CaloriesWSPage(),
+          CaloriesDayPage.route: (context) => CaloriesDayPage(),
           Function1Page.route: (context) => Function1Page(),
           Function2Page.route: (context) => Function2Page(),
         },

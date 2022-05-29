@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:bmwt_app/screens/loginpage.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:bmwt_app/screens/caloriesWSpage.dart';
+import 'package:bmwt_app/screens/calorieshomepage.dart';
 import 'package:bmwt_app/screens/function1page.dart';
 import 'package:bmwt_app/screens/function2page.dart';
 
@@ -27,7 +27,7 @@ class HomePage extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, CaloriesWSPage.route);
+                Navigator.pushNamed(context, CaloriesHomePage.route);
               }, 
               child: Text('To caloriesWS page'),
               ),

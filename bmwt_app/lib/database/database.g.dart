@@ -63,6 +63,8 @@ class _$AppDatabase extends AppDatabase {
 
   CaloriesWSDao? _caloriesWSDaoInstance;
 
+  CaloriesDayDao? _caloriesDayDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -82,7 +84,9 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `CaloriesWS` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `startDay` INTEGER NOT NULL, `lastDay` INTEGER NOT NULL, `caloriesBMR` REAL NOT NULL, `activityCalories` REAL NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `CaloriesWS` (`id` INTEGER NOT NULL, `startDay` INTEGER NOT NULL, `lastDay` INTEGER NOT NULL, `activityCalories` REAL, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `CaloriesDay` (`idWeek` INTEGER NOT NULL, `idDayOfTheWeek` INTEGER NOT NULL, `startDay` INTEGER NOT NULL, `lastDay` INTEGER NOT NULL, `day` INTEGER NOT NULL, `activityCalories` REAL, PRIMARY KEY (`idWeek`, `idDayOfTheWeek`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -93,6 +97,12 @@ class _$AppDatabase extends AppDatabase {
   @override
   CaloriesWSDao get caloriesWSDao {
     return _caloriesWSDaoInstance ??= _$CaloriesWSDao(database, changeListener);
+  }
+
+  @override
+  CaloriesDayDao get caloriesDayDao {
+    return _caloriesDayDaoInstance ??=
+        _$CaloriesDayDao(database, changeListener);
   }
 }
 
@@ -106,7 +116,6 @@ class _$CaloriesWSDao extends CaloriesWSDao {
                   'id': item.id,
                   'startDay': _dateTimeConverter.encode(item.startDay),
                   'lastDay': _dateTimeConverter.encode(item.lastDay),
-                  'caloriesBMR': item.caloriesBMR,
                   'activityCalories': item.activityCalories
                 }),
         _caloriesWSDeletionAdapter = DeletionAdapter(
@@ -117,7 +126,6 @@ class _$CaloriesWSDao extends CaloriesWSDao {
                   'id': item.id,
                   'startDay': _dateTimeConverter.encode(item.startDay),
                   'lastDay': _dateTimeConverter.encode(item.lastDay),
-                  'caloriesBMR': item.caloriesBMR,
                   'activityCalories': item.activityCalories
                 });
 
@@ -135,11 +143,10 @@ class _$CaloriesWSDao extends CaloriesWSDao {
   Future<List<CaloriesWS>> findAllCaloriesWS() async {
     return _queryAdapter.queryList('SELECT * FROM CaloriesWS',
         mapper: (Map<String, Object?> row) => CaloriesWS(
-            row['id'] as int?,
+            row['id'] as int,
             _dateTimeConverter.decode(row['startDay'] as int),
             _dateTimeConverter.decode(row['lastDay'] as int),
-            row['caloriesBMR'] as double,
-            row['activityCalories'] as double));
+            row['activityCalories'] as double?));
   }
 
   @override
@@ -151,6 +158,81 @@ class _$CaloriesWSDao extends CaloriesWSDao {
   @override
   Future<void> deleteCaloriesWS(CaloriesWS caloriesWS) async {
     await _caloriesWSDeletionAdapter.delete(caloriesWS);
+  }
+}
+
+class _$CaloriesDayDao extends CaloriesDayDao {
+  _$CaloriesDayDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _caloriesDayInsertionAdapter = InsertionAdapter(
+            database,
+            'CaloriesDay',
+            (CaloriesDay item) => <String, Object?>{
+                  'idWeek': item.idWeek,
+                  'idDayOfTheWeek': item.idDayOfTheWeek,
+                  'startDay': _dateTimeConverter.encode(item.startDay),
+                  'lastDay': _dateTimeConverter.encode(item.lastDay),
+                  'day': _dateTimeConverter.encode(item.day),
+                  'activityCalories': item.activityCalories
+                }),
+        _caloriesDayDeletionAdapter = DeletionAdapter(
+            database,
+            'CaloriesDay',
+            ['idWeek', 'idDayOfTheWeek'],
+            (CaloriesDay item) => <String, Object?>{
+                  'idWeek': item.idWeek,
+                  'idDayOfTheWeek': item.idDayOfTheWeek,
+                  'startDay': _dateTimeConverter.encode(item.startDay),
+                  'lastDay': _dateTimeConverter.encode(item.lastDay),
+                  'day': _dateTimeConverter.encode(item.day),
+                  'activityCalories': item.activityCalories
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<CaloriesDay> _caloriesDayInsertionAdapter;
+
+  final DeletionAdapter<CaloriesDay> _caloriesDayDeletionAdapter;
+
+  @override
+  Future<List<CaloriesDay>> findAllCaloriesDay() async {
+    return _queryAdapter.queryList('SELECT * FROM CaloriesDay',
+        mapper: (Map<String, Object?> row) => CaloriesDay(
+            row['idWeek'] as int,
+            row['idDayOfTheWeek'] as int,
+            _dateTimeConverter.decode(row['startDay'] as int),
+            _dateTimeConverter.decode(row['lastDay'] as int),
+            _dateTimeConverter.decode(row['day'] as int),
+            row['activityCalories'] as double?));
+  }
+
+  @override
+  Future<List<CaloriesDay>> findAllCaloriesDayOfAWeek(int idWeek) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM CaloriesDay WHERE idWeek = ?1',
+        mapper: (Map<String, Object?> row) => CaloriesDay(
+            row['idWeek'] as int,
+            row['idDayOfTheWeek'] as int,
+            _dateTimeConverter.decode(row['startDay'] as int),
+            _dateTimeConverter.decode(row['lastDay'] as int),
+            _dateTimeConverter.decode(row['day'] as int),
+            row['activityCalories'] as double?),
+        arguments: [idWeek]);
+  }
+
+  @override
+  Future<void> insertCaloriesDay(CaloriesDay caloriesDay) async {
+    await _caloriesDayInsertionAdapter.insert(
+        caloriesDay, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteCaloriesDay(CaloriesDay caloriesDay) async {
+    await _caloriesDayDeletionAdapter.delete(caloriesDay);
   }
 }
 

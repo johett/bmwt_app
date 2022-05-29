@@ -7,6 +7,8 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 //Here, we are importing the entities and the daos of the database
 import 'package:bmwt_app/database/daos/caloriesWSDao.dart';
 import 'package:bmwt_app/database/entities/caloriesWS.dart';
+import 'package:bmwt_app/database/daos/caloriesDayDao.dart';
+import 'package:bmwt_app/database/entities/caloriesDay.dart';
 
  //The generated code will be in database.g.dart
 part 'database.g.dart';
@@ -15,8 +17,9 @@ part 'database.g.dart';
 //We also added a TypeConverter to manage the DateTime of a Meal entry, since DateTimes are not natively
 //supported by Floor.
 @TypeConverters([DateTimeConverter])
-@Database(version: 1, entities: [CaloriesWS])
+@Database(version: 1, entities: [CaloriesWS, CaloriesDay])
 abstract class AppDatabase extends FloorDatabase {
   //Add all the daos as getters here
   CaloriesWSDao get caloriesWSDao;
+  CaloriesDayDao get caloriesDayDao;
 }//AppDatabase
