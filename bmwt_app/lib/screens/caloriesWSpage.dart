@@ -13,7 +13,7 @@ import '../utility/sendData.dart';
 import 'caloriesDaypage.dart';
 
 class CaloriesWSPage extends StatelessWidget {
-  CaloriesWSPage({Key? key}) : super(key: key);
+  const CaloriesWSPage({Key? key}) : super(key: key);
 
   static const route = '/caloriesWS';
   static const routename = 'CaloriesWSPage';
@@ -27,7 +27,7 @@ class CaloriesWSPage extends StatelessWidget {
     print('${CaloriesWSPage.routename} built');
     return Scaffold(
       appBar: AppBar(
-        title: Text(CaloriesWSPage.routename),
+        title: const Text(CaloriesWSPage.routename),
       ),
 
       floatingActionButton: FloatingActionButton(
@@ -74,8 +74,9 @@ class CaloriesWSPage extends StatelessWidget {
           if(notnull!=0){
             activityAverage=activityAverage!/notnull;
           }
-          else
+          else {
             activityAverage=0;
+          }
 
           await Provider.of<DatabaseRepository>(context, listen: false).insertCaloriesWS(
             CaloriesWS(
@@ -86,7 +87,7 @@ class CaloriesWSPage extends StatelessWidget {
             )
           );
           },
-          child: Icon(Icons.add)),
+          child: const Icon(Icons.add)),
       
       body: Center(
         child: 
@@ -103,7 +104,7 @@ class CaloriesWSPage extends StatelessWidget {
                       return ListTile(
                             title: Text('From: ${caloriesWS.startDay.day}/${caloriesWS.startDay.month}/${caloriesWS.startDay.year} To: ${caloriesWS.lastDay.day}/${caloriesWS.startDay.month}/${caloriesWS.startDay.year}'),
                             subtitle: (caloriesWS.activityCalories==null)?
-                                Text('No data avaiables'):
+                                const Text('No data avaiables'):
                                 ((caloriesWS.activityCalories!+measBMR)>dietCalories)?
                                   Text('Deficit of ${(caloriesWS.activityCalories!+measBMR-dietCalories).toInt()} kcal on average per day'):
                                   Text('Surplus of ${(dietCalories-caloriesWS.activityCalories!-measBMR).toInt()} kcal on average per day'),
@@ -116,9 +117,9 @@ class CaloriesWSPage extends StatelessWidget {
                                   }
                                   await Provider.of<DatabaseRepository>(context, listen: false).removeCaloriesWS(caloriesWS);
                                 },
-                                child: Icon(MdiIcons.delete)
+                                child: const Icon(MdiIcons.delete)
                               ):
-                              Icon(MdiIcons.nullIcon),
+                              const Icon(MdiIcons.nullIcon),
                             onTap: (){
                               Navigator.pushNamed(context, CaloriesDayPage.route, arguments: SendData(index,dietCalories,measBMR));
                             },
@@ -127,8 +128,9 @@ class CaloriesWSPage extends StatelessWidget {
                     },
                 );
               }
-              else
-                return CircularProgressIndicator();
+              else {
+                return const CircularProgressIndicator();
+              }
             },//builder of FutureBuilder
           );
         }),
@@ -143,8 +145,9 @@ class CaloriesWSPage extends StatelessWidget {
       double UB = fitbitActivityCalories/0.957;
       return (UB+LB)/2;
     }
-    else 
+    else {
       return null;
+    }
   }
 
 } //CaloriesWSPage

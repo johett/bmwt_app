@@ -1,0 +1,19 @@
+Target dependency graph (7 targets)
+FMDB in Pods, no dependencies
+Flutter in Pods, no dependencies
+flutter_secure_storage in Pods, depends on:
+Flutter in Pods (explicit)
+flutter_web_auth in Pods, depends on:
+Flutter in Pods (explicit)
+shared_preferences_ios in Pods, depends on:
+Flutter in Pods (explicit)
+sqflite in Pods, depends on:
+FMDB in Pods (explicit)
+Flutter in Pods (explicit)
+Pods-Runner in Pods, depends on:
+FMDB in Pods (explicit)
+Flutter in Pods (explicit)
+flutter_secure_storage in Pods (explicit)
+flutter_web_auth in Pods (explicit)
+shared_preferences_ios in Pods (explicit)
+sqflite in Pods (explicit)

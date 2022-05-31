@@ -1,13 +1,12 @@
 import 'package:bmwt_app/database/entities/caloriesDay.dart';
 import 'package:bmwt_app/utility/sendData.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../repositories/databaseRepository.dart';
 
 class CaloriesDayPage extends StatelessWidget {
-  CaloriesDayPage({Key? key}) : super(key: key);
+  const CaloriesDayPage({Key? key}) : super(key: key);
 
   static const route = '/caloriesDay';
   static const routename = 'CaloriesDayPage';
@@ -22,7 +21,7 @@ class CaloriesDayPage extends StatelessWidget {
     
     return Scaffold(
       appBar: AppBar(
-        title: Text(CaloriesDayPage.routename),
+        title: const Text(CaloriesDayPage.routename),
       ),
       body: Center(
         child:
@@ -39,7 +38,7 @@ class CaloriesDayPage extends StatelessWidget {
                       return ListTile(
                             title: Text('Day: ${caloriesDay.day.day}/${caloriesDay.day.month}/${caloriesDay.day.year}'),
                             subtitle: (caloriesDay.activityCalories==null)?
-                                Text('No data avaiables'):
+                                const Text('No data avaiables'):
                                 ((caloriesDay.activityCalories!+measBMR)>dietCalories)?
                                   Text('Deficit of ${(caloriesDay.activityCalories!+measBMR-dietCalories).toInt()} kcal'):
                                   Text('Surplus of ${(dietCalories-caloriesDay.activityCalories!-measBMR).toInt()} kcal'),
@@ -47,8 +46,9 @@ class CaloriesDayPage extends StatelessWidget {
                     }
                   );
               }
-              else
-                return CircularProgressIndicator();
+              else {
+                return const CircularProgressIndicator();
+              }
             },//builder of FutureBuilder
           );
         }),

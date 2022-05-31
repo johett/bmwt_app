@@ -2,13 +2,12 @@ import 'package:bmwt_app/screens/caloriesWSpage.dart';
 import 'package:bmwt_app/utility/senData2.dart';
 import 'package:fitbitter/fitbitter.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utility/credentials.dart';
 
 class CaloriesHomePage extends StatefulWidget {
-  CaloriesHomePage({Key? key}) : super(key: key);
+  const CaloriesHomePage({Key? key}) : super(key: key);
 
   static const route = '/calorieshome';
   static const routename = 'CaloriesHomePage';
@@ -29,7 +28,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
     print('${CaloriesHomePage.routename} built');
     return Scaffold(
       appBar: AppBar(
-        title: Text(CaloriesHomePage.routename),
+        title: const Text(CaloriesHomePage.routename),
       ),
       body: Center(
         child: Column(
@@ -42,11 +41,12 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                 {
                   return Text('Your BMR calculated by Fitbit is ${snapshot.data}');
                 }
-                else
-                  return CircularProgressIndicator();
+                else {
+                  return const CircularProgressIndicator();
+                }
               },
               ),
-            SizedBox(height: 50,),
+            const SizedBox(height: 50,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -56,8 +56,9 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                     if(snapshot.hasData){
                       return Text('BMR: ${snapshot.data}');
                   }
-                  else
-                    return CircularProgressIndicator();
+                  else {
+                      return const CircularProgressIndicator();
+                    }
                   }
                   ),
               ],
@@ -72,9 +73,9 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                     sp.setDouble('measuredBMR', measuredBMR);
                     setState(() {});
                   },
-                  child: Text('-10'),
+                  child: const Text('-10'),
                   ),
-                SizedBox(width: 10,),
+                const SizedBox(width: 10,),
                 ElevatedButton(
                   onPressed: () async{
                     final sp = await SharedPreferences.getInstance();
@@ -82,9 +83,9 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                     sp.setDouble('measuredBMR', measuredBMR);
                     setState(() {});
                   },
-                  child: Text('-1'),
+                  child: const Text('-1'),
                   ),
-                SizedBox(width: 10,),
+                const SizedBox(width: 10,),
                 ElevatedButton(
                   onPressed: () async{
                     final sp = await SharedPreferences.getInstance();
@@ -92,9 +93,9 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                     sp.setDouble('measuredBMR', measuredBMR);
                     setState(() {});
                   },
-                  child: Text('+1'),
+                  child: const Text('+1'),
                   ),
-                SizedBox(width: 10,),
+                const SizedBox(width: 10,),
                 ElevatedButton(
                   onPressed: () async{
                     final sp = await SharedPreferences.getInstance();
@@ -102,7 +103,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                     sp.setDouble('measuredBMR', measuredBMR);
                     setState(() {});
                   },
-                  child: Text('+10'),
+                  child: const Text('+10'),
                   ),
               ],
             ),
@@ -115,8 +116,9 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                      if(snapshot.hasData){
                        return Text('Diet kcal per day: ${snapshot.data}');
                      }
-                     else
-                       return CircularProgressIndicator();
+                     else {
+                       return const CircularProgressIndicator();
+                     }
                    },
                    ),
               ],
@@ -131,9 +133,9 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                     sp.setDouble('thresholdCalories', thresholdCalories);
                     setState(() {});
                   },
-                  child: Text('-10'),
+                  child: const Text('-10'),
                   ),
-                SizedBox(width: 10,),
+                const SizedBox(width: 10,),
                 ElevatedButton(
                   onPressed: () async{
                     final sp = await SharedPreferences.getInstance();
@@ -141,9 +143,9 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                     sp.setDouble('thresholdCalories', thresholdCalories);
                     setState(() {});
                   },
-                  child: Text('-1'),
+                  child: const Text('-1'),
                   ),
-                SizedBox(width: 10,),
+                const SizedBox(width: 10,),
                 ElevatedButton(
                   onPressed: () async{
                     final sp = await SharedPreferences.getInstance();
@@ -151,9 +153,9 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                     sp.setDouble('thresholdCalories', thresholdCalories);
                     setState(() {});
                   },
-                  child: Text('+1'),
+                  child: const Text('+1'),
                   ),
-                SizedBox(width: 10,),
+                const SizedBox(width: 10,),
                 ElevatedButton(
                   onPressed: () async{
                     final sp = await SharedPreferences.getInstance();
@@ -161,11 +163,11 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                     sp.setDouble('thresholdCalories', thresholdCalories);
                     setState(() {});
                   },
-                  child: Text('+10'),
+                  child: const Text('+10'),
                   ),
               ],
             ),
-            SizedBox(height: 50,),
+            const SizedBox(height: 50,),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -176,7 +178,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                     double? measuredBMR=sp.getDouble('measuredBMR')!+10.0;
                     Navigator.pushNamed(context, CaloriesWSPage.route, arguments: SendData2(thresholdCalories, measuredBMR));
                   },
-                  child: Text('Go to Weeks Summary page'),
+                  child: const Text('Go to Weeks Summary page'),
                 )
               ],
             )
@@ -217,7 +219,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
     );
     final sp = await SharedPreferences.getInstance();
     FitbitActivityTimeseriesAPIURL fitbitActivityTimeseriesApiUrl = FitbitActivityTimeseriesAPIURL.dayWithResource(
-        date: DateTime.now().subtract(Duration(days: 1)),
+        date: DateTime.now().subtract(const Duration(days: 1)),
         userID: sp.getString('username'),
         resource: 'caloriesBMR',
     );

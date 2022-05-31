@@ -25,7 +25,7 @@ void main() async {
   //That instance will be then shared through the platform and will be unique.
   runApp(ChangeNotifierProvider<DatabaseRepository>(
     create: (context) => databaseRepository,
-    child: MyApp(),
+    child: const MyApp(),
   ));
 } //main
 
@@ -39,13 +39,13 @@ class MyApp extends StatelessWidget {
       initialRoute: LoginPage.route,
       //This maps names to the set of routes within the app
       routes: {
-        LoginPage.route: (context) => LoginPage(),
-        HomePage.route: (context) => HomePage(),
-        CaloriesHomePage.route: (context) => CaloriesHomePage(),
-        CaloriesWSPage.route: (context) => CaloriesWSPage(),
-        CaloriesDayPage.route: (context) => CaloriesDayPage(),
-        Function1Page.route: (context) => Function1Page(),
-        Function2Page.route: (context) => Function2Page(),
+        LoginPage.route: (context) => const LoginPage(),
+        HomePage.route: (context) => const HomePage(),
+        CaloriesHomePage.route: (context) => const CaloriesHomePage(),
+        CaloriesWSPage.route: (context) => const CaloriesWSPage(),
+        CaloriesDayPage.route: (context) => const CaloriesDayPage(),
+        Function1Page.route: (context) => StepsPage(),
+        Function2Page.route: (context) => const Function2Page(),
       },
     );
   } //build
