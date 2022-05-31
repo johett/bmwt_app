@@ -23,6 +23,7 @@ class Function1Page extends State<StepsPage> {
   static const route = '/function1';
   static const routename = 'Function1Page';
   double? maxChartHeight = 20000;
+  late TooltipBehavior? _tooltip = TooltipBehavior(enable: true);
   late List<_ChartData> data;
   /*= [
     _ChartData('A', 1000),
@@ -33,8 +34,6 @@ class Function1Page extends State<StepsPage> {
     _ChartData('X', 0),
     _ChartData('Y', 0)
   ]; */
-
-  late TooltipBehavior? _tooltip = TooltipBehavior(enable: true);
 
   @override
   initState() {
