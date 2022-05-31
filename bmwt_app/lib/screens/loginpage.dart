@@ -2,11 +2,10 @@ import 'package:bmwt_app/utility/credentials.dart';
 import 'package:fitbitter/fitbitter.dart';
 import 'package:flutter/material.dart';
 import 'package:bmwt_app/screens/homepage.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
-  LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   static const route = '/login';
   static const routename = 'LoginPage';
@@ -37,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
     print('${LoginPage.routename} built');
     return Scaffold(
       appBar: AppBar(
-        title: Text(LoginPage.routename),
+        title: const Text(LoginPage.routename),
       ),
       body: Center(
         child: ElevatedButton(
@@ -54,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
             sp.setString('username', userId);
             Navigator.of(context).pushReplacementNamed(HomePage.route);
           }
-        },child: Text('Login'),),
+        },child: const Text('Login'),),
       ),
     );
   } } //Page
