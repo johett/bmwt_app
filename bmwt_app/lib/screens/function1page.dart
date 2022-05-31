@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-=======
 import 'dart:ffi';
 
 import 'package:fitbitter/fitbitter.dart';
@@ -10,18 +6,12 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utility/credentials.dart';
->>>>>>> devjo
 
 class Function1Page extends StatelessWidget {
   Function1Page({Key? key}) : super(key: key);
 
   static const route = '/function1';
   static const routename = 'Function1Page';
-<<<<<<< HEAD
-  
-=======
-
->>>>>>> devjo
   @override
   Widget build(BuildContext context) {
     print('${Function1Page.routename} built');
@@ -30,9 +20,6 @@ class Function1Page extends StatelessWidget {
         title: Text(Function1Page.routename),
       ),
       body: Center(
-<<<<<<< HEAD
-        child: Text('Function1 to be implemented'),
-=======
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -56,14 +43,10 @@ class Function1Page extends StatelessWidget {
             ),
           ],
         ),
->>>>>>> devjo
       ),
     );
   } //build
 
-<<<<<<< HEAD
-} //Page
-=======
 // this function returns the daily steps.
 //input: days will be substracted from todays date e.g. days=1 is yesterday, days=2 is two days before etc.
   Future<String> _DailySteps(int days) async {
@@ -112,4 +95,3 @@ class Function1Page extends StatelessWidget {
     return (sum / n).roundToDouble();
   }
 } //Page
->>>>>>> devjo
