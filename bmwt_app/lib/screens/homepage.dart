@@ -2,14 +2,13 @@ import 'package:bmwt_app/utility/credentials.dart';
 import 'package:fitbitter/fitbitter.dart';
 import 'package:flutter/material.dart';
 import 'package:bmwt_app/screens/loginpage.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bmwt_app/screens/calorieshomepage.dart';
 import 'package:bmwt_app/screens/function1page.dart';
 import 'package:bmwt_app/screens/function2page.dart';
 
 class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   static const route = '/home';
   static const routename = 'HomePage';
@@ -19,7 +18,7 @@ class HomePage extends StatelessWidget {
     print('${HomePage.routename} built');
     return Scaffold(
       appBar: AppBar(
-        title: Text(HomePage.routename),
+        title: const Text(HomePage.routename),
       ),
       body: Center(
         child: Column(
@@ -29,19 +28,19 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.pushNamed(context, CaloriesHomePage.route);
               }, 
-              child: Text('To caloriesWS page'),
+              child: const Text('To caloriesWS page'),
               ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, Function1Page.route);
               }, 
-              child: Text('Function 1'),
+              child: const Text('Function 1'),
               ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pushNamed(context, Function2Page.route);
               }, 
-              child: Text('Function 2'),
+              child: const Text('Function 2'),
               )
           ],
         ),
@@ -50,15 +49,15 @@ class HomePage extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Colors.blue,
               ),
               child: Text('bmwt_app')
             ),
             ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Logout'),
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
               
               onTap: () async{
                 final sp = await SharedPreferences.getInstance();
