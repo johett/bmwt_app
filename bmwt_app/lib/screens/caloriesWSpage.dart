@@ -26,11 +26,14 @@ class CaloriesWSPage extends StatelessWidget {
 
     print('${CaloriesWSPage.routename} built');
     return Scaffold(
+      backgroundColor: Colors.blue,
       appBar: AppBar(
         title: Text(CaloriesWSPage.routename),
       ),
 
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange,
+        foregroundColor: Colors.black,
         onPressed: () async {
           final list = await Provider.of<DatabaseRepository>(context, listen: false).findAllCaloriesWS();
           int weeksInDB = list.length;
@@ -96,17 +99,21 @@ class CaloriesWSPage extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final data = snapshot.data as List<CaloriesWS>;
-                return ListView.builder(
+                return ListView.separated(
+                    separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.blue, thickness: 10,),
                     itemCount: data.length,
                     itemBuilder: (context, index) {
                       final caloriesWS = data[index];
                       return ListTile(
+                            tileColor: Color(0xFFFFE082),
+                            style: ListTileStyle.list,
+                            leading: Text('${index+1}', style: TextStyle(color: Colors.blue, fontSize: 20) ),
                             title: Text('From: ${caloriesWS.startDay.day}/${caloriesWS.startDay.month}/${caloriesWS.startDay.year} To: ${caloriesWS.lastDay.day}/${caloriesWS.startDay.month}/${caloriesWS.startDay.year}'),
                             subtitle: (caloriesWS.activityCalories==null)?
                                 Text('No data avaiables'):
                                 ((caloriesWS.activityCalories!+measBMR)>dietCalories)?
-                                  Text('Deficit of ${(caloriesWS.activityCalories!+measBMR-dietCalories).toInt()} kcal on average per day'):
-                                  Text('Surplus of ${(dietCalories-caloriesWS.activityCalories!-measBMR).toInt()} kcal on average per day'),
+                                  Text('Deficit of ${(caloriesWS.activityCalories!+measBMR-dietCalories).toInt()} kcal per day',style: TextStyle(color: Colors.red)):
+                                  Text('Surplus of ${(dietCalories-caloriesWS.activityCalories!-measBMR).toInt()} kcal per day',style: TextStyle(color: Colors.green)),
                             trailing: (index==data.length-1)?
                               ElevatedButton(
                                 onPressed: () async{
@@ -118,7 +125,7 @@ class CaloriesWSPage extends StatelessWidget {
                                 },
                                 child: Icon(MdiIcons.delete)
                               ):
-                              Icon(MdiIcons.nullIcon),
+                              Container(width:0, height:0),
                             onTap: (){
                               Navigator.pushNamed(context, CaloriesDayPage.route, arguments: SendData(index,dietCalories,measBMR));
                             },
