@@ -28,160 +28,175 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
   Widget build(BuildContext context) {
     print('${CaloriesHomePage.routename} built');
     return Scaffold(
+      backgroundColor: Color(0xFF2196F3),
       appBar: AppBar(
         title: Text(CaloriesHomePage.routename),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-              FutureBuilder(
-              future: _bmrFitbit(),
-              builder: (context, snapshot) {
-                if(snapshot.hasData)
-                {
-                  return Text('Your BMR calculated by Fitbit is ${snapshot.data}');
-                }
-                else
-                  return CircularProgressIndicator();
-              },
-              ),
-            SizedBox(height: 50,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FutureBuilder(
-                  future: _measuredBMR(),
-                  builder:(context,snapshot){
-                    if(snapshot.hasData){
-                      return Text('BMR: ${snapshot.data}');
-                  }
-                  else
-                    return CircularProgressIndicator();
-                  }
-                  ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () async{
-                    final sp = await SharedPreferences.getInstance();
-                    double? measuredBMR=sp.getDouble('measuredBMR')!-10.0;
-                    sp.setDouble('measuredBMR', measuredBMR);
-                    setState(() {});
-                  },
-                  child: Text('-10'),
-                  ),
-                SizedBox(width: 10,),
-                ElevatedButton(
-                  onPressed: () async{
-                    final sp = await SharedPreferences.getInstance();
-                    double? measuredBMR=sp.getDouble('measuredBMR')!-1.0;
-                    sp.setDouble('measuredBMR', measuredBMR);
-                    setState(() {});
-                  },
-                  child: Text('-1'),
-                  ),
-                SizedBox(width: 10,),
-                ElevatedButton(
-                  onPressed: () async{
-                    final sp = await SharedPreferences.getInstance();
-                    double? measuredBMR=sp.getDouble('measuredBMR')!+1.0;
-                    sp.setDouble('measuredBMR', measuredBMR);
-                    setState(() {});
-                  },
-                  child: Text('+1'),
-                  ),
-                SizedBox(width: 10,),
-                ElevatedButton(
-                  onPressed: () async{
-                    final sp = await SharedPreferences.getInstance();
-                    double? measuredBMR=sp.getDouble('measuredBMR')!+10.0;
-                    sp.setDouble('measuredBMR', measuredBMR);
-                    setState(() {});
-                  },
-                  child: Text('+10'),
-                  ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                 FutureBuilder(
-                   future: _thresholdCalories(),
-                   builder: (context, snapshot){
-                     if(snapshot.hasData){
-                       return Text('Diet kcal per day: ${snapshot.data}');
-                     }
-                     else
-                       return CircularProgressIndicator();
-                   },
-                   ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () async{
-                    final sp = await SharedPreferences.getInstance();
-                    double? thresholdCalories=sp.getDouble('thresholdCalories')!-10.0;
-                    sp.setDouble('thresholdCalories', thresholdCalories);
-                    setState(() {});
-                  },
-                  child: Text('-10'),
-                  ),
-                SizedBox(width: 10,),
-                ElevatedButton(
-                  onPressed: () async{
-                    final sp = await SharedPreferences.getInstance();
-                    double? thresholdCalories=sp.getDouble('thresholdCalories')!-1.0;
-                    sp.setDouble('thresholdCalories', thresholdCalories);
-                    setState(() {});
-                  },
-                  child: Text('-1'),
-                  ),
-                SizedBox(width: 10,),
-                ElevatedButton(
-                  onPressed: () async{
-                    final sp = await SharedPreferences.getInstance();
-                    double? thresholdCalories=sp.getDouble('thresholdCalories')!+1.0;
-                    sp.setDouble('thresholdCalories', thresholdCalories);
-                    setState(() {});
-                  },
-                  child: Text('+1'),
-                  ),
-                SizedBox(width: 10,),
-                ElevatedButton(
-                  onPressed: () async{
-                    final sp = await SharedPreferences.getInstance();
-                    double? thresholdCalories=sp.getDouble('thresholdCalories')!+10.0;
-                    sp.setDouble('thresholdCalories', thresholdCalories);
-                    setState(() {});
-                  },
-                  child: Text('+10'),
-                  ),
-              ],
-            ),
-            SizedBox(height: 50,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () async{
-                    final sp = await SharedPreferences.getInstance();
-                    double thresholdCalories=sp.getDouble('thresholdCalories')!;
-                    double? measuredBMR=sp.getDouble('measuredBMR')!+10.0;
-                    Navigator.pushNamed(context, CaloriesWSPage.route, arguments: SendData2(thresholdCalories, measuredBMR));
-                  },
-                  child: Text('Go to Weeks Summary page'),
-                )
-              ],
-            )
+        child: SizedBox(
+          height: 350,
+          width: 300,
+          child: Center(
+            child: Container(
+              color: Color(0xFFFFE082),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.orange, width: 5)),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                      FutureBuilder(
+                      future: _bmrFitbit(),
+                      builder: (context, snapshot) {
+                        if(snapshot.hasData)
+                        {
+                          return Text('Your BMR calculated by Fitbit is ${snapshot.data}',style: TextStyle(fontSize: 16));
+                        }
+                        else
+                          return CircularProgressIndicator();
+                      },
+                      ),
+                    SizedBox(height: 50,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FutureBuilder(
+                          future: _measuredBMR(),
+                          builder:(context,snapshot){
+                            if(snapshot.hasData){
+                              return Text('BMR: ${snapshot.data}', style: TextStyle(fontSize: 20),);
+                          }
+                          else
+                            return CircularProgressIndicator();
+                          }
+                          ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async{
+                            final sp = await SharedPreferences.getInstance();
+                            double? measuredBMR=sp.getDouble('measuredBMR')!-10.0;
+                            sp.setDouble('measuredBMR', measuredBMR);
+                            setState(() {});
+                          },
+                          child: Text('-10'),
+                          ),
+                        SizedBox(width: 10,),
+                        ElevatedButton(
+                          onPressed: () async{
+                            final sp = await SharedPreferences.getInstance();
+                            double? measuredBMR=sp.getDouble('measuredBMR')!-1.0;
+                            sp.setDouble('measuredBMR', measuredBMR);
+                            setState(() {});
+                          },
+                          child: Text('-1'),
+                          ),
+                        SizedBox(width: 10,),
+                        ElevatedButton(
+                          onPressed: () async{
+                            final sp = await SharedPreferences.getInstance();
+                            double? measuredBMR=sp.getDouble('measuredBMR')!+1.0;
+                            sp.setDouble('measuredBMR', measuredBMR);
+                            setState(() {});
+                          },
+                          child: Text('+1'),
+                          ),
+                        SizedBox(width: 10,),
+                        ElevatedButton(
+                          onPressed: () async{
+                            final sp = await SharedPreferences.getInstance();
+                            double? measuredBMR=sp.getDouble('measuredBMR')!+10.0;
+                            sp.setDouble('measuredBMR', measuredBMR);
+                            setState(() {});
+                          },
+                          child: Text('+10'),
+                          ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                         FutureBuilder(
+                           future: _thresholdCalories(),
+                           builder: (context, snapshot){
+                             if(snapshot.hasData){
+                               return Text('Diet kcal per day: ${snapshot.data}',style: TextStyle(fontSize: 20));
+                             }
+                             else
+                               return CircularProgressIndicator();
+                           },
+                           ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async{
+                            final sp = await SharedPreferences.getInstance();
+                            double? thresholdCalories=sp.getDouble('thresholdCalories')!-10.0;
+                            sp.setDouble('thresholdCalories', thresholdCalories);
+                            setState(() {});
+                          },
+                          child: Text('-10'),
+                          ),
+                        SizedBox(width: 10,),
+                        ElevatedButton(
+                          onPressed: () async{
+                            final sp = await SharedPreferences.getInstance();
+                            double? thresholdCalories=sp.getDouble('thresholdCalories')!-1.0;
+                            sp.setDouble('thresholdCalories', thresholdCalories);
+                            setState(() {});
+                          },
+                          child: Text('-1'),
+                          ),
+                        SizedBox(width: 10,),
+                        ElevatedButton(
+                          onPressed: () async{
+                            final sp = await SharedPreferences.getInstance();
+                            double? thresholdCalories=sp.getDouble('thresholdCalories')!+1.0;
+                            sp.setDouble('thresholdCalories', thresholdCalories);
+                            setState(() {});
+                          },
+                          child: Text('+1'),
+                          ),
+                        SizedBox(width: 10,),
+                        ElevatedButton(
+                          onPressed: () async{
+                            final sp = await SharedPreferences.getInstance();
+                            double? thresholdCalories=sp.getDouble('thresholdCalories')!+10.0;
+                            sp.setDouble('thresholdCalories', thresholdCalories);
+                            setState(() {});
+                          },
+                          child: Text('+10'),
+                          ),
+                      ],
+                    ),
+                    SizedBox(height: 50,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () async{
+                            final sp = await SharedPreferences.getInstance();
+                            double thresholdCalories=sp.getDouble('thresholdCalories')!;
+                            double? measuredBMR=sp.getDouble('measuredBMR')!+10.0;
+                            Navigator.pushNamed(context, CaloriesWSPage.route, arguments: SendData2(thresholdCalories, measuredBMR));
+                          },
+                          child: Text('Go to Weeks Summary page', style: TextStyle(fontSize: 20),),
+                          style: ElevatedButton.styleFrom(primary: Colors.green),
+                        )
+                      ],
+                    )
 
-          ],
+                  ],
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
