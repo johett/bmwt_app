@@ -1,3 +1,4 @@
+import 'package:bmwt_app/screens/lastWeekHeart.dart';
 import 'package:bmwt_app/utility/credentials.dart';
 import 'package:fitbitter/fitbitter.dart';
 import 'package:flutter/material.dart';
@@ -16,19 +17,15 @@ class HP3 extends StatefulWidget {
 }
 
 class _HP3State extends State<HP3> {
-  String HR = '';
-  String Calories = '';
-  String minutesFatBurn = '';
-  String minutesCardio = '';
-  String minutesPeak = '';
+  String HR = '0';
+  String Calories = '0';
+  String minutesFatBurn = '0';
+  String minutesCardio = '0';
+  String minutesPeak = '0';
+  FitbitHeartData? heart = null;
 
   @override
   void initState() {
-    HR = '0';
-    Calories = '0';
-    minutesFatBurn = '0';
-    minutesCardio = '0';
-    minutesPeak = '0';
     _getData();
     super.initState();
     //Check if the user is already logged in before rendering the login page
@@ -36,6 +33,12 @@ class _HP3State extends State<HP3> {
 
   @override
   Widget build(BuildContext context) {
+    if (heart == null) {
+      return new Scaffold(
+        appBar: AppBar(title: Text("loading...")),
+      );
+    }
+
     print('${HP3.routename} built');
     return Scaffold(
       appBar: AppBar(
@@ -44,7 +47,9 @@ class _HP3State extends State<HP3> {
       body: Row(
         children: [
           IconButton(
-              onPressed: _getHeartRateNow,
+              onPressed: () {
+                Navigator.pushNamed(context, LastWeekHeart.route);
+              },
               icon: Icon(Icons.arrow_left_rounded)),
           Expanded(
               child: Page(
@@ -75,47 +80,46 @@ class _HP3State extends State<HP3> {
     return fitbitHeartData2;
   }
 
-  Future<void> _getHeartRateNow() async {
-    FitbitHeartData data = await getTodayHeart();
+  Future<void> _getHeartRateNow(FitbitHeartData h) async {
     setState(() {
-      HR = data.restingHeartRate.toString();
+      HR = h.restingHeartRate.toString();
     });
   }
 
-  Future<void> _getMinutesFatBurnNow() async {
-    FitbitHeartData data = await getTodayHeart();
+  Future<void> _getMinutesFatBurnNow(FitbitHeartData h) async {
     setState(() {
-      minutesFatBurn = data.minutesFatBurn.toString();
+      minutesFatBurn = h.minutesFatBurn.toString();
     });
   }
 
-  Future<void> _getMinutesCardioNow() async {
-    FitbitHeartData data = await getTodayHeart();
+  Future<void> _getMinutesCardioNow(FitbitHeartData h) async {
     setState(() {
-      minutesCardio = data.minutesCardio.toString();
+      minutesCardio = h.minutesCardio.toString();
     });
   }
 
-  Future<void> _getMinutesPeakNow() async {
-    FitbitHeartData data = await getTodayHeart();
+  Future<void> _getMinutesPeakNow(FitbitHeartData h) async {
     setState(() {
-      minutesPeak = data.minutesPeak.toString();
+      minutesPeak = h.minutesPeak.toString();
     });
   }
 
-  Future<void> _getCaloriesNow() async {
-    FitbitHeartData data = await getTodayHeart();
+  Future<void> _getCaloriesNow(FitbitHeartData h) async {
     setState(() {
-      Calories = data.caloriesCardio.toString();
+      Calories = h.caloriesCardio.toString();
     });
   }
 
   Future<void> _getData() async {
-    await _getHeartRateNow();
-    await _getMinutesFatBurnNow();
-    await _getMinutesCardioNow();
-    await _getMinutesPeakNow();
-    await _getCaloriesNow();
+    FitbitHeartData h = await getTodayHeart();
+    setState(() {
+      heart = h;
+    });
+    await _getHeartRateNow(heart!);
+    await _getMinutesFatBurnNow(heart!);
+    await _getMinutesCardioNow(heart!);
+    await _getMinutesPeakNow(heart!);
+    await _getCaloriesNow(heart!);
   }
 } //Page
 
