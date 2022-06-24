@@ -2,6 +2,7 @@ import 'package:bmwt_app/database/database.dart';
 import 'package:bmwt_app/database/entities/caloriesDay.dart';
 import 'package:bmwt_app/database/entities/caloriesWS.dart';
 import 'package:bmwt_app/database/entities/heart.dart';
+import 'package:bmwt_app/database/entities/heartgoals.dart';
 import 'package:flutter/material.dart';
 
 class DatabaseRepository extends ChangeNotifier {
@@ -75,5 +76,21 @@ class DatabaseRepository extends ChangeNotifier {
 
   Future<void> deleteHeart(Heart heart) async {
     await database.heartDao.deleteHeart(heart);
+  }
+
+  //*********************HeartGoals************************ */
+  Future<List<HeartGoals>> getHeartGoals() async {
+    final heart = await database.heartGoalsDao.getHeartGoals();
+    return heart;
+    //notifyListeners();
+  }
+
+  Future<void> updateHeartGoals(HeartGoals heart) async {
+    await database.heartGoalsDao.updateHeartGoals(heart);
+    notifyListeners();
+  }
+
+  Future<void> deleteHeartGoals(HeartGoals heart) async {
+    await database.heartGoalsDao.deleteHeartGoals(heart);
   }
 } //DatabaseRepository
