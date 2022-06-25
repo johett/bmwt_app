@@ -36,25 +36,48 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     print('${LoginPage.routename} built');
     return Scaffold(
+      backgroundColor: Colors.blue,
       appBar: AppBar(
         title: Text(LoginPage.routename),
       ),
       body: Center(
-        child: ElevatedButton(
-          onPressed: () async{
-          String? userId = await FitbitConnector.authorize(
-            context: context,
-            clientID: FitbitAppCredentials.clientID,
-            clientSecret: FitbitAppCredentials.clientSecret,
-            redirectUri: FitbitAppCredentials.redirectUri,
-            callbackUrlScheme: FitbitAppCredentials.callbackUrlScheme,
-            );
-          if(userId!=null){
-            final sp = await SharedPreferences.getInstance();
-            sp.setString('username', userId);
-            Navigator.of(context).pushReplacementNamed(HomePage.route);
-          }
-        },child: Text('Login'),),
+        child: SizedBox(
+          height: 150,
+          width: 300,
+          child: Container(
+                color: Color(0xFFFFE082),
+            child: Column(
+              children: [
+                Text('Welcome to BMWT Project App',style: TextStyle(fontSize: 20),),
+                SizedBox(
+                  height:20,
+                ),
+                Text('Keep monitored your health status!', style: TextStyle(fontSize: 18),),
+                SizedBox(
+                  height:20,
+                ),
+                ElevatedButton(
+                  onPressed: () async{
+                  String? userId = await FitbitConnector.authorize(
+                    context: context,
+                    clientID: FitbitAppCredentials.clientID,
+                    clientSecret: FitbitAppCredentials.clientSecret,
+                    redirectUri: FitbitAppCredentials.redirectUri,
+                    callbackUrlScheme: FitbitAppCredentials.callbackUrlScheme,
+                    );
+                    if(userId!=null){
+                      final sp = await SharedPreferences.getInstance();
+                      sp.setString('username', userId);
+                      Navigator.of(context).pushReplacementNamed(HomePage.route);
+                    }
+                  },
+                child: Text('Login',style: TextStyle(fontSize: 20),),
+                style: ElevatedButton.styleFrom(primary: Colors.green),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   } } //Page
