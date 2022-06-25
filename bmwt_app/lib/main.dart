@@ -1,115 +1,52 @@
+import 'package:bmwt_app/screens/homepage.dart';
+import 'package:bmwt_app/screens/loginpage.dart';
+import 'package:bmwt_app/screens/calorieshomepage.dart';
+import 'package:bmwt_app/screens/caloriesWSpage.dart';
+import 'package:bmwt_app/screens/caloriesDaypage.dart';
+import 'package:bmwt_app/screens/function1page.dart';
+import 'package:bmwt_app/screens/function2page.dart';
 import 'package:flutter/material.dart';
+import 'package:bmwt_app/database/database.dart';
+import 'package:bmwt_app/repositories/databaseRepository.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() async {
+  //This is a special method that use WidgetFlutterBinding to interact with the Flutter engine.
+  //This is needed when you need to interact with the native core of the app.
+  //Here, we need it since when need to initialize the DB before running the app.
+  WidgetsFlutterBinding.ensureInitialized();
+
+  //This opens the database.
+  final AppDatabase database =
+      await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+  //This creates a new DatabaseRepository from the AppDatabase instance just initialized
+  final databaseRepository = DatabaseRepository(database: database);
+  //Here, we run the app and we provide to the whole widget tree the instance of the DatabaseRepository.
+  //That instance will be then shared through the platform and will be unique.
+  runApp(ChangeNotifierProvider<DatabaseRepository>(
+    create: (context) => databaseRepository,
+    child: const MyApp(),
+  ));
+} //main
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'This is a test commit',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.green,
-      ),
-      home: const MyHomePage(title: 'Hello, I am testing the git functions'),
+      //Approach 2:
+      //This specifies the app entrypoint
+      initialRoute: LoginPage.route,
+      //This maps names to the set of routes within the app
+      routes: {
+        LoginPage.route: (context) => const LoginPage(),
+        HomePage.route: (context) => const HomePage(),
+        CaloriesHomePage.route: (context) => const CaloriesHomePage(),
+        CaloriesWSPage.route: (context) => const CaloriesWSPage(),
+        CaloriesDayPage.route: (context) => const CaloriesDayPage(),
+        Function1Page.route: (context) => StepsPage(),
+        Function2Page.route: (context) => const Function2Page(),
+      },
     );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Test hello:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
+  } //build
+}//MyApp
