@@ -29,7 +29,9 @@ class _LastWeekHeart extends State<LastWeekHeart> {
     print('${LastWeekHeart.routename} built');
     return Scaffold(
         appBar: AppBar(
-          title: Text(LastWeekHeart.routename),
+          title: Text(LastWeekHeart.routename,
+              style: TextStyle(color: Color.fromARGB(255, 233, 86, 32))),
+          backgroundColor: Color.fromARGB(255, 44, 0, 30),
         ),
         body: CardManager());
     ;
@@ -49,31 +51,33 @@ class _CardManager extends State<CardManager> {
   List<FitbitHeartData>? data;
   @override
   void initState() {
-    gethearts();
     super.initState();
-    print(data);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (data == null) {
-      return new Scaffold(
-        appBar: AppBar(title: Text("loading")),
-      );
-    } else {
-      body:
-      return Column(
-        children: [
-          Card(data: data![0]),
-          Card(data: data![1]),
-          Card(data: data![2]),
-          Card(data: data![3]),
-          Card(data: data![4]),
-          Card(data: data![5]),
-          Card(data: data![6]),
-        ],
-      );
-    }
+    return Scaffold(
+        body: Center(
+            child: FutureBuilder(
+                future: getLastWeekHearts(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    data = snapshot.data as List<FitbitHeartData>;
+                    return new Scaffold(
+                      backgroundColor: Color.fromARGB(255, 44, 0, 30),
+                      body: SingleChildScrollView(
+                        child: Column(children: [
+                          for (int i = 1; i < data!.length; i++)
+                            HeartCard(data: data![i])
+                        ]),
+                      ),
+                    );
+                  } else {
+                    return Scaffold(
+                      body: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                })));
   }
 
   Future<List<FitbitHeartData>> getLastWeekHearts() async {
@@ -90,23 +94,17 @@ class _CardManager extends State<CardManager> {
         await fitbitHeartDataManager.fetch(fitbitHeartApiUrl);
     return fitbitHeartData as List<FitbitHeartData>;
   }
-
-  Future<void> gethearts() async {
-    data = await getLastWeekHearts();
-    setState(() {
-      data = data;
-    });
-  }
 }
 
-class Card extends StatefulWidget {
+//****************************HEARTCARD************************************** */
+class HeartCard extends StatefulWidget {
   final FitbitHeartData? data;
-  Card({Key? key, required this.data}) : super(key: key);
+  HeartCard({Key? key, required this.data}) : super(key: key);
   @override
-  State<Card> createState() => _Card();
+  State<HeartCard> createState() => _HeartCard();
 }
 
-class _Card extends State<Card> {
+class _HeartCard extends State<HeartCard> {
   @override
   void initState() {
     super.initState();
@@ -115,14 +113,95 @@ class _Card extends State<Card> {
   @override
   Widget build(BuildContext context) {
     body:
-    return Column(
-      children: [
-        Text(widget.data!.dateOfMonitoring.toString()),
-        Text(widget.data!.caloriesCardio.toString()),
-        Text(widget.data!.minutesCardio.toString()),
-        Text(widget.data!.minutesPeak.toString()),
-        Text(widget.data!.minutesFatBurn.toString()),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+      child: Card(
+        elevation: 2,
+        color: Color.fromARGB(255, 94, 39, 80),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Text(
+                    'Date:   ',
+                    style: TextStyle(
+                        fontSize: 20, color: Color.fromARGB(255, 233, 86, 32)),
+                  ),
+                  Text(
+                      widget.data!.dateOfMonitoring.toString().substring(0, 10),
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Color.fromARGB(255, 233, 86, 32))),
+                ],
+                mainAxisAlignment: MainAxisAlignment.center,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Row(
+                    children: [
+                      Text('Calories Cardio:    ',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 233, 86, 32))),
+                      Text(
+                          widget.data!.caloriesCardio!
+                              .roundToDouble()
+                              .toString(),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 233, 86, 32))),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Minutes Cardio:   ',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 233, 86, 32))),
+                      Text(widget.data!.minutesCardio.toString(),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 233, 86, 32))),
+                    ],
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Row(
+                    children: [
+                      Text('Minutes Peak:   ',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 233, 86, 32))),
+                      Text(widget.data!.minutesPeak.toString(),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 233, 86, 32))),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text('Minutes burning fat:    ',
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 233, 86, 32))),
+                      Text(widget.data!.minutesFatBurn.toString(),
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Color.fromARGB(255, 233, 86, 32))),
+                    ],
+                  ),
+                ],
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

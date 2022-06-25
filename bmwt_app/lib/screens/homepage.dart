@@ -1,6 +1,7 @@
 import 'package:bmwt_app/screens/heartpage.dart';
 import 'package:bmwt_app/utility/credentials.dart';
 import 'package:fitbitter/fitbitter.dart';
+import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
 import 'package:bmwt_app/screens/loginpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +10,8 @@ import 'package:bmwt_app/screens/function1page.dart';
 import 'package:bmwt_app/screens/function2page.dart';
 import 'package:bmwt_app/screens/HP2.dart';
 import 'package:bmwt_app/screens/HP3.dart';
+import 'package:bmwt_app/screens/DBTest.dart';
+import 'package:bmwt_app/assets/customIcons/my_flutter_app_icons.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,42 +21,54 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int _index = 2;
     print('${HomePage.routename} built');
     return Scaffold(
       appBar: AppBar(
-        title: const Text(HomePage.routename),
+        title: const Text(HomePage.routename,
+            style: TextStyle(color: Color.fromARGB(255, 233, 86, 32))),
+        backgroundColor: Color.fromARGB(255, 44, 0, 30),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, CaloriesWSPage.route);
-              },
-              child: const Text('To caloriesWS page'),
+      bottomNavigationBar: BottomNavigationBar(
+          unselectedItemColor: Color.fromARGB(255, 233, 86, 32),
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Color.fromARGB(255, 44, 0, 30),
+          fixedColor: Color.fromARGB(255, 233, 86, 32),
+          currentIndex: _index,
+          // ignore: prefer_const_constructors
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.food_bank),
+              label: 'Calories',
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, Function1Page.route);
-              },
-              child: const Text('Function 1'),
+            BottomNavigationBarItem(
+              icon: Icon(MyFlutterApp.heart),
+              label: 'Heart',
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, Function2Page.route);
-              },
-              child: const Text('Function 2'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
             ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, HP3.route);
-              },
-              child: const Text('Heart'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.settings),
+              label: 'Settings',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.stop),
+              label: 'DB Test',
             )
           ],
-        ),
-      ),
+          onTap: (index) {
+            if (index == 0) {
+              Navigator.pushNamed(context, CaloriesWSPage.route);
+            }
+            if (index == 1) {
+              Navigator.pushNamed(context, HP3.route);
+            }
+            if (index == 4) {
+              Navigator.pushNamed(context, DBTest.route);
+            }
+          }),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,

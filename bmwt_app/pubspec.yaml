@@ -46,8 +46,21 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  uses-material-design: true
+
+  fonts:
+  - family:  MyFlutterApp
+    fonts:
+     - asset: lib\assets\customIcons\MyFlutterApp.ttf
+
+
+#* Font Awesome 4, Copyright (C) 2016 by Dave Gandy
+ #       Author:    Dave Gandy
+  #    License:   SIL ()
+   #    Homepage:  http://fortawesome.github.com/Font-Awesome/
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
-  uses-material-design: true
+  

@@ -1,3 +1,4 @@
+import 'package:bmwt_app/screens/dbTest.dart';
 import 'package:bmwt_app/screens/homepage.dart';
 import 'package:bmwt_app/screens/loginpage.dart';
 import 'package:bmwt_app/screens/calorieshomepage.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
         HeartPage.route: (context) => HeartPage(),
         HP2.route: (context) => HP2(),
         HP3.route: (context) => HP3(),
+        DBTest.route: (context) => DBTest(),
         LastWeekHeart.route: (context) => LastWeekHeart(),
         CaloriesWSPage.route: (context) => const CaloriesWSPage(),
         CaloriesDayPage.route: (context) => const CaloriesDayPage(),
