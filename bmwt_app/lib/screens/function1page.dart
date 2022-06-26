@@ -342,7 +342,7 @@ class Function1Page extends State<StepsPage> {
   }
 }
 //Page
-
+/*
 /* this class defines the data format for the bar chart
 */
 class _ChartData {
@@ -353,3 +353,4 @@ class _ChartData {
   // numeric axis
   double y;
 }
+*/
