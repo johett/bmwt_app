@@ -1,14 +1,3 @@
-<<<<<<< HEAD
-//import 'dart:html';
-
-import 'dart:math';
-import 'dart:async';
-import 'dart:math';
-import 'package:flutter/services.dart';
-
-import 'package:fitbitter/fitbitter.dart';
-import 'package:flutter/material.dart';
-=======
 import 'dart:async';
 import 'dart:math';
 import 'package:intl/intl.dart';
@@ -16,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:fitbitter/fitbitter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
->>>>>>> devjo
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -63,35 +51,16 @@ class Function1Page extends State<StepsPage> {
     getAllData();
 
     // initiliaze the data for the chart
-<<<<<<< HEAD
-
-    //fill chart data with new data entries
-    //Function1Page().data[i].y = fitbitActivityData[i].value!;
-
-    getChartData.inputList(fitbitActivityData);
-
-    //data = getChartData.fetchedData;
-    _isLoading = true;
-
-    _tooltip =
-        TooltipBehavior(enable: true, color: Colors.grey, header: "Steps on");
-=======
     _tooltip = TooltipBehavior(
       enable: true,
       color: Colors.grey,
       header: "Daily steps",
     );
->>>>>>> devjo
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    //print('${Function1Page.routename} built');
-
-=======
->>>>>>> devjo
     return Scaffold(
       appBar: AppBar(
         title: const Text(Function1Page.routename),
@@ -296,13 +265,8 @@ class Function1Page extends State<StepsPage> {
     );
   } //build
 
-<<<<<<< HEAD
-//gets all the data with the API call in the beginning, therefore we have less API calls in total
-  void getAllData() async {
-=======
 //output: gets all the data with the API call in the beginning, therefore we have less API calls in total
   Future<List<FitbitActivityTimeseriesData>> getAllData() async {
->>>>>>> devjo
     FitbitActivityTimeseriesDataManager fitbitActivityDataManager =
         FitbitActivityTimeseriesDataManager(
             clientID: FitbitAppCredentials.clientID,
@@ -343,13 +307,9 @@ class Function1Page extends State<StepsPage> {
   Future<double?> _getTodaysSteps() async {
     await Future.delayed(const Duration(seconds: 2));
 
-<<<<<<< HEAD
-    return fitbitActivityData[0].value;
-=======
     todaysSteps = fitbitActivityData[6].value;
 
     return fitbitActivityData[6].value;
->>>>>>> devjo
   }
 
   //output: returns average steps of the last 7 days or the last 30 days
@@ -367,10 +327,7 @@ class Function1Page extends State<StepsPage> {
       }
     });
     await Future.delayed(const Duration(seconds: 2));
-<<<<<<< HEAD
-=======
     averageSteps = (sum! / 7).roundToDouble();
->>>>>>> devjo
     return (sum! / 7).roundToDouble();
   }
 
@@ -378,11 +335,7 @@ class Function1Page extends State<StepsPage> {
   Future<String> _Recommendation() async {
     var today = todaysSteps;
 
-<<<<<<< HEAD
-    if (todaysSteps! < stepGoal) {
-=======
     if (today! < stepGoal) {
->>>>>>> devjo
       return "You have still some steps to walk to reach your personal step goal. Let's go!";
     } else {
       return "Hurray, your reached your average steps! Keep going to reach your daily goal!";
@@ -390,49 +343,4 @@ class Function1Page extends State<StepsPage> {
   }
 }
 //Page
-/*
-/* this class defines the data format for the bar chart
-*/
-class _ChartData {
-  _ChartData(this.x, this.y);
 
-// category axis
-  String x;
-  // numeric axis
-  double y;
-}
-<<<<<<< HEAD
-
-//TODO:make this class in an own folder
-class _WeeklySteps {
-  _WeeklySteps();
-  List<_ChartData> fetchedData = [];
-
-  void inputList(var fitbitActivityData) async {
-    //SET input parameters
-    //List<_ChartData> data = Function1Page().data;
-    Timer(Duration(seconds: 1), () {
-      for (var i = 0; i < 7; i++) {
-        fetchedData.add(_ChartData(fitbitActivityData[i].dateTime.toString(),
-            fitbitActivityData[i].value!));
-        print("DEBUG" + fetchedData[i].y.toString());
-
-        //fill chart data with new data entries
-        //Function1Page().data[i].y = fitbitActivityData[i].value!;
-
-      }
-    });
-
-    //TODO: dynamic chart height
-    /* maxChartHeight = stepsList.reduce(
-        (curr, next) => curr! > double.parse(next.toString()) ? curr : next); */
-    //print(maxChartHeight);
-  }
-
-  List<_ChartData> getChartData() {
-    return fetchedData;
-  }
-}
-=======
-*/
->>>>>>> devjo
