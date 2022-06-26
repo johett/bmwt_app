@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:intl/intl.dart';
 
 import 'package:fitbitter/fitbitter.dart';
 import 'package:flutter/material.dart';
@@ -22,23 +23,26 @@ class StepsPage extends StatefulWidget {
 class Function1Page extends State<StepsPage> {
   static const route = '/function1';
   static const routename = 'Your Steps Overview';
-  // this var helps me to delay the loading time of the barchart
-  var _isLoading = false;
+
   //this int sets the step goal; default 10000
-  double stepGoal = 1000.0;
+  double stepGoal = 10000.0;
   double dummyNumber = 0;
 
   late List<_ChartData> data = [];
 
+//initialize variables for the chart
   late TooltipBehavior _tooltip;
-  late _WeeklySteps getChartData = _WeeklySteps();
   TextEditingController _textFieldController = TextEditingController();
-
   double? maxChartHeight = 20000;
   // todo: make it dynamic
 
+//general variables for the API call
   var sp;
   var fitbitActivityData;
+
+//variables for the steps
+  double averageSteps = 0.0;
+  double todaysSteps = 0.0;
 
   @override
   initState() {
@@ -46,24 +50,16 @@ class Function1Page extends State<StepsPage> {
     getAllData();
 
     // initiliaze the data for the chart
-
-    //fill chart data with new data entries
-    //Function1Page().data[i].y = fitbitActivityData[i].value!;
-
-    getChartData.inputList(fitbitActivityData);
-
-    //data = getChartData.fetchedData;
-    _isLoading = true;
-
-    _tooltip =
-        TooltipBehavior(enable: true, color: Colors.grey, header: "Steps on");
+    _tooltip = TooltipBehavior(
+      enable: true,
+      color: Colors.grey,
+      header: "Daily steps",
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    //print('${Function1Page.routename} built');
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(Function1Page.routename),
@@ -104,58 +100,103 @@ class Function1Page extends State<StepsPage> {
                 }
               },
             ),
-            Row(children: [
-              _isLoading
-                  ? SfCartesianChart(
-                      isTransposed: true,
-                      title: ChartTitle(
-                          text: "Daily steps overview of the last 7 days",
-                          textStyle: TextStyle(fontWeight: FontWeight.bold)),
-                      primaryXAxis: CategoryAxis(),
-                      primaryYAxis: NumericAxis(
-                          minimum: 0,
-                          maximum: maxChartHeight,
-                          interval: 1000,
-                          title: AxisTitle(text: "Steps")),
-                      tooltipBehavior: _tooltip,
-                      series: <ChartSeries<_ChartData, String>>[
-                          BarSeries<_ChartData, String>(
-                              dataSource: data,
-                              xValueMapper: (_ChartData data, _) => data.x,
-                              yValueMapper: (_ChartData data, _) => data.y,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15)),
-                              name: 'Test',
-                              color: Color.fromARGB(255, 255, 210, 8))
-                        ])
-                  : const CircularProgressIndicator()
-            ]),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.timeline,
-                  color: Colors.blue,
-                ),
-                FutureBuilder(
-                  future: _AverageSteps(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Text('Average of last 7 days: ${snapshot.data}');
-                    } else {
-                      return const CircularProgressIndicator();
-                    }
-                  },
-                ),
-              ],
+            FutureBuilder(
+              future: getAllData(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SfCartesianChart(
+                            isTransposed: true,
+                            title: ChartTitle(
+                                text: "Daily steps overview of the last 7 days",
+                                textStyle:
+                                    TextStyle(fontWeight: FontWeight.bold)),
+                            primaryXAxis: CategoryAxis(labelRotation: 90),
+                            primaryYAxis: NumericAxis(
+                                numberFormat: NumberFormat.compact(),
+                                minimum: 0,
+                                maximum: maxChartHeight,
+                                interval: 1000,
+                                title: AxisTitle(text: "Steps"),
+                                plotBands: <PlotBand>[
+                                  PlotBand(
+                                    isVisible: true,
+                                    start: stepGoal,
+                                    end: stepGoal,
+                                    borderWidth: 2,
+                                    borderColor: Colors.blue,
+                                    text: "Your personal goal",
+                                    textAngle: 0,
+                                    horizontalTextAlignment: TextAnchor.end,
+                                    verticalTextAlignment: TextAnchor.middle,
+                                    textStyle: TextStyle(
+                                        color: Colors.blue, fontSize: 12),
+                                  ),
+                                  PlotBand(
+                                    isVisible: true,
+                                    start: averageSteps,
+                                    end: averageSteps,
+                                    borderWidth: 2,
+                                    borderColor: Colors.grey,
+                                    text: "Average",
+                                    horizontalTextAlignment: TextAnchor.end,
+                                    verticalTextAlignment: TextAnchor.middle,
+                                    textStyle: TextStyle(
+                                        color: Colors.grey, fontSize: 12),
+                                  )
+                                ]),
+                            tooltipBehavior: _tooltip,
+                            series: <ChartSeries<_ChartData, String>>[
+                              BarSeries<_ChartData, String>(
+                                  dataSource: data,
+                                  xValueMapper: (_ChartData data, _) => data.x,
+                                  yValueMapper: (_ChartData data, _) => data.y,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15)),
+                                  name: 'Test',
+                                  color: Color.fromARGB(255, 255, 210, 8))
+                            ])
+                      ]);
+                } else {
+                  return const CircularProgressIndicator(
+                    color: Colors.yellow,
+                  );
+                }
+              },
             ),
+            FutureBuilder(
+                future: getAllData(),
+                builder: (context, snapshot) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.timeline,
+                        color: Colors.blue,
+                      ),
+                      FutureBuilder(
+                        future: _AverageSteps(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Text(
+                                'Average of last 7 days: ${snapshot.data}');
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        },
+                      ),
+                    ],
+                  );
+                }),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               Icon(
                 Icons.directions_walk_rounded,
                 color: Colors.blue,
               ),
               FutureBuilder(
-                future: _DailySteps(0),
+                future: _getTodaysSteps(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Text('Steps today: ${snapshot.data}');
@@ -223,8 +264,8 @@ class Function1Page extends State<StepsPage> {
     );
   } //build
 
-//gets all the data with the API call in the beginning, therefore we have less API calls in total
-  void getAllData() async {
+//output: gets all the data with the API call in the beginning, therefore we have less API calls in total
+  Future<List<FitbitActivityTimeseriesData>> getAllData() async {
     FitbitActivityTimeseriesDataManager fitbitActivityDataManager =
         FitbitActivityTimeseriesDataManager(
             clientID: FitbitAppCredentials.clientID,
@@ -241,14 +282,33 @@ class Function1Page extends State<StepsPage> {
 
     fitbitActivityData = await fitbitActivityDataManager
         .fetch(fitbitActivityApiUrl) as List<FitbitActivityTimeseriesData>;
+
+    var max = 0.0;
+//fill the data variable for the chart data
+    for (var i = 0; i < 7; i++) {
+      data.add(_ChartData(
+          DateFormat("EEEE dd.MM.yy").format(DateTime.parse(
+              fitbitActivityData[i]
+                  .dateOfMonitoring
+                  .toString()
+                  .substring(0, 10)
+                  .toString())),
+          fitbitActivityData[i].value!));
+      if (fitbitActivityData[i].value! > max) {
+        max = fitbitActivityData[i].value!;
+      }
+    }
+    maxChartHeight = max.round() + 1000;
+    return fitbitActivityData;
   }
 
-// this function returns the daily steps.
-//input: days will be substracted from todays date e.g. days=1 is yesterday, days=2 is two days before etc.
-  Future<double?> _DailySteps(int days) async {
+// this function returns the steps of today
+  Future<double?> _getTodaysSteps() async {
     await Future.delayed(const Duration(seconds: 2));
 
-    return fitbitActivityData[0].value;
+    todaysSteps = fitbitActivityData[6].value;
+
+    return fitbitActivityData[6].value;
   }
 
   //output: returns average steps of the last 7 days or the last 30 days
@@ -266,55 +326,30 @@ class Function1Page extends State<StepsPage> {
       }
     });
     await Future.delayed(const Duration(seconds: 2));
+    averageSteps = (sum! / 7).roundToDouble();
     return (sum! / 7).roundToDouble();
   }
 
+// this method gives a recommendation/motivational message based on if the goal is reached or not
   Future<String> _Recommendation() async {
-    var averageSteps = await _AverageSteps();
-    var todaysSteps = await _DailySteps(0); // steps today
+    var today = todaysSteps;
 
-    if (todaysSteps! < stepGoal) {
+    if (today! < stepGoal) {
       return "You have still some steps to walk to reach your personal step goal. Let's go!";
     } else {
       return "Hurray, your reached your average steps! Keep going to reach your daily goal!";
     }
   }
-} //Page
+}
+//Page
 
+/* this class defines the data format for the bar chart
+*/
 class _ChartData {
   _ChartData(this.x, this.y);
 
+// category axis
   String x;
+  // numeric axis
   double y;
-}
-
-//TODO:make this class in an own folder
-class _WeeklySteps {
-  _WeeklySteps();
-  List<_ChartData> fetchedData = [];
-
-  void inputList(var fitbitActivityData) async {
-    //SET input parameters
-    //List<_ChartData> data = Function1Page().data;
-    Timer(Duration(seconds: 1), () {
-      for (var i = 0; i < 7; i++) {
-        fetchedData.add(_ChartData(fitbitActivityData[i].dateTime.toString(),
-            fitbitActivityData[i].value!));
-        print("DEBUG" + fetchedData[i].y.toString());
-
-        //fill chart data with new data entries
-        //Function1Page().data[i].y = fitbitActivityData[i].value!;
-
-      }
-    });
-
-    //TODO: dynamic chart height
-    /* maxChartHeight = stepsList.reduce(
-        (curr, next) => curr! > double.parse(next.toString()) ? curr : next); */
-    //print(maxChartHeight);
-  }
-
-  List<_ChartData> getChartData() {
-    return fetchedData;
-  }
 }

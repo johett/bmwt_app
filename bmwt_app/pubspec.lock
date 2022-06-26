@@ -147,11 +147,7 @@ packages:
       name: convert
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "3.0.1"
-=======
     version: "3.0.2"
->>>>>>> main
   crypto:
     dependency: transitive
     description:
@@ -165,11 +161,7 @@ packages:
       name: cupertino_icons
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "1.0.4"
-=======
     version: "1.0.5"
->>>>>>> main
   dart_style:
     dependency: transitive
     description:
@@ -226,8 +218,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-<<<<<<< HEAD
-=======
   fl_chart:
     dependency: "direct main"
     description:
@@ -235,7 +225,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.55.0"
->>>>>>> main
   floor:
     dependency: "direct main"
     description:
@@ -467,11 +456,7 @@ packages:
       name: package_config
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "2.0.2"
-=======
     version: "2.1.0"
->>>>>>> main
   path:
     dependency: transitive
     description:
@@ -485,11 +470,7 @@ packages:
       name: path_provider_linux
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "2.1.6"
-=======
     version: "2.1.7"
->>>>>>> main
   path_provider_platform_interface:
     dependency: transitive
     description:
@@ -503,11 +484,7 @@ packages:
       name: path_provider_windows
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "2.0.6"
-=======
     version: "2.0.7"
->>>>>>> main
   platform:
     dependency: transitive
     description:
@@ -542,11 +519,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "6.0.2"
-=======
     version: "6.0.3"
->>>>>>> main
   pub_semver:
     dependency: transitive
     description:
@@ -719,22 +692,14 @@ packages:
       name: syncfusion_flutter_charts
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "20.1.57"
-=======
     version: "20.1.60+1"
->>>>>>> main
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "20.1.57"
-=======
     version: "20.1.60"
->>>>>>> main
   synchronized:
     dependency: transitive
     description:
