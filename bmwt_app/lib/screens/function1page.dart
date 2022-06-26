@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../utility/ChartData.dart';
 import '../utility/credentials.dart';
 
 class StepsPage extends StatefulWidget {
@@ -28,7 +29,7 @@ class Function1Page extends State<StepsPage> {
   double stepGoal = 10000.0;
   double dummyNumber = 0;
 
-  late List<_ChartData> data = [];
+  late List<ChartData> data = [];
 
 //initialize variables for the chart
   late TooltipBehavior _tooltip;
@@ -148,11 +149,11 @@ class Function1Page extends State<StepsPage> {
                                   )
                                 ]),
                             tooltipBehavior: _tooltip,
-                            series: <ChartSeries<_ChartData, String>>[
-                              BarSeries<_ChartData, String>(
+                            series: <ChartSeries<ChartData, String>>[
+                              BarSeries<ChartData, String>(
                                   dataSource: data,
-                                  xValueMapper: (_ChartData data, _) => data.x,
-                                  yValueMapper: (_ChartData data, _) => data.y,
+                                  xValueMapper: (ChartData data, _) => data.x,
+                                  yValueMapper: (ChartData data, _) => data.y,
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15)),
                                   name: 'Test',
@@ -286,7 +287,7 @@ class Function1Page extends State<StepsPage> {
     var max = 0.0;
 //fill the data variable for the chart data
     for (var i = 0; i < 7; i++) {
-      data.add(_ChartData(
+      data.add(ChartData(
           DateFormat("EEEE dd.MM.yy").format(DateTime.parse(
               fitbitActivityData[i]
                   .dateOfMonitoring
