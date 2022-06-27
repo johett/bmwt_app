@@ -125,80 +125,36 @@ class _HeartCard extends State<HeartCard> {
               Row(
                 children: [
                   Text(
-                    'Date:   ',
+                    'Date:  ${widget.data!.dateOfMonitoring.toString().substring(0, 10)} ',
                     style: TextStyle(
                         fontSize: 20, color: Color.fromARGB(255, 233, 86, 32)),
                   ),
-                  Text(
-                      widget.data!.dateOfMonitoring.toString().substring(0, 10),
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Color.fromARGB(255, 233, 86, 32))),
                 ],
                 mainAxisAlignment: MainAxisAlignment.center,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Row(
-                    children: [
-                      Text('Calories Cardio:    ',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 233, 86, 32))),
-                      Text(
-                          widget.data!.caloriesCardio!
-                              .roundToDouble()
-                              .toString(),
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 233, 86, 32))),
-                    ],
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Calories Cardio: ${widget.data!.caloriesCardio!.roundToDouble().toString()}',
+                    ),
+                    Text(
+                      'Minutes Cardio: ${widget.data!.minutesCardio.toString()}',
+                    ),
+                  ],
+                ),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(
+                    'Minutes Peak: ${widget.data!.minutesPeak.toString()}',
                   ),
-                  Row(
-                    children: [
-                      Text('Minutes Cardio:   ',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 233, 86, 32))),
-                      Text(widget.data!.minutesCardio.toString(),
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 233, 86, 32))),
-                    ],
+                  Text(
+                    'Minutes burning fat: ${widget.data!.minutesFatBurn.toString()} ',
                   ),
-                ],
-              ),
-              Row(
-                children: [
-                  Row(
-                    children: [
-                      Text('Minutes Peak:   ',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 233, 86, 32))),
-                      Text(widget.data!.minutesPeak.toString(),
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 233, 86, 32))),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text('Minutes burning fat:    ',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 233, 86, 32))),
-                      Text(widget.data!.minutesFatBurn.toString(),
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Color.fromARGB(255, 233, 86, 32))),
-                    ],
-                  ),
-                ],
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-              ),
+                ])
+              ]),
             ],
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
           ),
         ),
       ),

@@ -16,9 +16,13 @@ class HP3 extends StatelessWidget {
 
   static const route = '/hp3';
   static const routename = 'HP3';
+  Color base = Color.fromARGB(255, 119, 41, 83);
+  Color darkBase = Color.fromARGB(255, 44, 0, 30);
+  Color accent = Color.fromARGB(255, 233, 86, 32);
 
   @override
   Widget build(BuildContext context) {
+    TextStyle accentText = TextStyle(color: accent);
     print('${HP3.routename} built');
     return Scaffold(
         body: Center(
@@ -27,16 +31,20 @@ class HP3 extends StatelessWidget {
       builder: (ctx, snapshot) {
         if (snapshot.hasData) {
           return Scaffold(
+            backgroundColor: base,
             appBar: AppBar(
-              title: Text('Today'),
+              title: Text('Today', style: accentText),
+              backgroundColor: darkBase,
             ),
             body: Row(
               children: [
                 IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, LastWeekHeart.route);
-                    },
-                    icon: Icon(Icons.arrow_left_rounded)),
+                  onPressed: () {
+                    Navigator.pushNamed(context, LastWeekHeart.route);
+                  },
+                  icon: Icon(Icons.arrow_left_rounded),
+                  color: accent,
+                ),
                 Expanded(child: Page(snapshot.data as FitbitHeartData))
               ],
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -44,7 +52,12 @@ class HP3 extends StatelessWidget {
             ),
           );
         } else {
-          return Center(child: CircularProgressIndicator());
+          return Scaffold(
+              backgroundColor: darkBase,
+              body: Center(
+                  child: CircularProgressIndicator(
+                color: accent,
+              )));
         }
       },
     )));
@@ -89,14 +102,14 @@ class Page extends StatelessWidget {
                 return Column(
                   children: [
                     HeartRateWidget(h.restingHeartRate.toString()),
-                    CaloriesCardioWidget(h.caloriesCardio.toString(),
-                        goals[0].goalCalories.toDouble()),
-                    MinutesCardioWidget(h.minutesCardio.toString(),
-                        goals[0].minutesCardio.toDouble()),
-                    MinutesPeakWidget(h.minutesPeak.toString(),
-                        goals[0].minutesPeak.toDouble()),
-                    MinutesFatBurnWidget(h.minutesFatBurn.toString(),
-                        goals[0].minutesBurningFat.toDouble())
+                    CaloriesCardioWidget(
+                        h.caloriesCardio.toString(), goals[0].goalCalories),
+                    MinutesCardioWidget(
+                        h.minutesCardio.toString(), goals[0].minutesCardio),
+                    MinutesPeakWidget(
+                        h.minutesPeak.toString(), goals[0].minutesPeak),
+                    MinutesFatBurnWidget(
+                        h.minutesFatBurn.toString(), goals[0].minutesBurningFat)
                   ],
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -133,11 +146,11 @@ class HeartRateWidget extends StatelessWidget {
             Icon(
               MyFlutterApp.heart,
               color: Color.fromARGB(255, 197, 17, 17),
-              size: 48,
+              size: 60,
             ),
             Text(
               '${hr}',
-              style: const TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 24),
             ),
           ],
           alignment: AlignmentDirectional.center,
@@ -150,7 +163,7 @@ class HeartRateWidget extends StatelessWidget {
 class MinutesCardioWidget extends StatelessWidget {
   final String minutesCardio;
   double progress = 0;
-  double goal;
+  int goal;
   MinutesCardioWidget(this.minutesCardio, this.goal) {
     progress = double.parse(minutesCardio);
     progress = progress / goal;
@@ -162,10 +175,11 @@ class MinutesCardioWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Text("minutes at cardio", style: const TextStyle(fontSize: 20)),
+      Text("Minutes at cardio", style: const TextStyle(fontSize: 20)),
       Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text('${minutesCardio}', style: const TextStyle(fontSize: 18)),
+        child: Text('${minutesCardio} / ${goal}',
+            style: const TextStyle(fontSize: 18)),
       ),
       Padding(
         padding: const EdgeInsets.fromLTRB(15.0, 10, 15, 0),
@@ -182,7 +196,7 @@ class MinutesCardioWidget extends StatelessWidget {
 class CaloriesCardioWidget extends StatelessWidget {
   final String caloriesCardio;
   double progress = 0;
-  double goal;
+  int goal;
   CaloriesCardioWidget(this.caloriesCardio, this.goal) {
     progress = double.parse(caloriesCardio);
     progress = progress / goal;
@@ -194,10 +208,10 @@ class CaloriesCardioWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Text("calories burned at cardio", style: const TextStyle(fontSize: 20)),
+      Text("Calories burned at cardio", style: const TextStyle(fontSize: 20)),
       Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text('${double.parse(caloriesCardio).round()}',
+        child: Text('${caloriesCardio} / ${goal}',
             style: const TextStyle(fontSize: 18)),
       ),
       Padding(
@@ -215,7 +229,7 @@ class CaloriesCardioWidget extends StatelessWidget {
 class MinutesPeakWidget extends StatelessWidget {
   final String minutesPeak;
   double progress = 0;
-  double goal;
+  int goal;
   MinutesPeakWidget(this.minutesPeak, this.goal) {
     progress = double.parse(minutesPeak);
     progress = progress / goal;
@@ -230,7 +244,8 @@ class MinutesPeakWidget extends StatelessWidget {
       Text("Minutes at peak", style: const TextStyle(fontSize: 20)),
       Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text('${minutesPeak}', style: const TextStyle(fontSize: 18)),
+        child: Text('${minutesPeak} / ${goal}',
+            style: const TextStyle(fontSize: 18)),
       ),
       Padding(
         padding: const EdgeInsets.fromLTRB(15.0, 10, 15, 0),
@@ -247,14 +262,13 @@ class MinutesPeakWidget extends StatelessWidget {
 class MinutesFatBurnWidget extends StatelessWidget {
   final String minutesFatBurn;
   double progress = 0;
-  double goal;
+  int goal;
   MinutesFatBurnWidget(this.minutesFatBurn, this.goal) {
     progress = double.parse(minutesFatBurn);
     progress = progress / goal;
     if (progress >= 1) {
       progress = 1;
     }
-    print('fatgoal ${goal}');
   }
 
   @override
@@ -263,7 +277,8 @@ class MinutesFatBurnWidget extends StatelessWidget {
       Text("Minutes burning fat", style: const TextStyle(fontSize: 20)),
       Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Text('${minutesFatBurn}', style: const TextStyle(fontSize: 18)),
+        child: Text('${minutesFatBurn} / ${goal}',
+            style: const TextStyle(fontSize: 18)),
       ),
       Padding(
         padding: const EdgeInsets.fromLTRB(15.0, 10, 15, 0),

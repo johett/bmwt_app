@@ -39,7 +39,33 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    Color accent = Color.fromARGB(255, 2, 86, 152);
+    Color base = Color.fromARGB(255, 119, 41, 83);
+    Color darkBase = Color.fromARGB(255, 44, 0, 30);
+    Color textColor = Color.fromARGB(255, 174, 167, 159);
     return MaterialApp(
+      theme: ThemeData(
+          focusColor: accent,
+          primaryColor: base,
+          primaryColorDark: darkBase,
+          scaffoldBackgroundColor: base,
+          bottomAppBarColor: darkBase,
+          backgroundColor: base,
+          appBarTheme: AppBarTheme(
+              color: darkBase,
+              titleTextStyle: TextStyle(color: accent, fontSize: 26)),
+          iconTheme: IconThemeData(color: accent),
+          textTheme: TextTheme(
+              //Changes text data
+              bodyText2: TextStyle(fontSize: 16, color: textColor)),
+          progressIndicatorTheme: ProgressIndicatorThemeData(color: accent),
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            backgroundColor: darkBase,
+            selectedItemColor: accent,
+            unselectedItemColor: accent,
+            type: BottomNavigationBarType.fixed,
+          )),
+
       //Approach 2:
       //This specifies the app entrypoint
       initialRoute: LoginPage.route,

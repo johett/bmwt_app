@@ -22,19 +22,50 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String? name = 'giacomo';
     int _index = 2;
     print('${HomePage.routename} built');
     return Scaffold(
       appBar: AppBar(
-        title: const Text(HomePage.routename,
-            style: TextStyle(color: Color.fromARGB(255, 233, 86, 32))),
-        backgroundColor: Color.fromARGB(255, 44, 0, 30),
+          title: const Text(
+        HomePage.routename,
+      )),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              colors: [
+                Theme.of(context).primaryColorDark,
+                Theme.of(context).focusColor
+              ],
+              begin: FractionalOffset.bottomLeft,
+              end: FractionalOffset.topRight,
+              stops: [0.2, 1]),
+        ),
+        child: Container(
+          alignment: Alignment.topCenter,
+          padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
+          child: FutureBuilder(
+            future: getName(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                name = snapshot.data as String;
+                return Text('Welcome back ${name}',
+                    style: TextStyle(
+                      fontSize: 36,
+                      color: Color.fromARGB(255, 174, 167, 159),
+                    ));
+              } else {
+                return Text('Welcome back',
+                    style: TextStyle(
+                      fontSize: 36,
+                      color: Color.fromARGB(255, 174, 167, 159),
+                    ));
+              }
+            },
+          ),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-          unselectedItemColor: Color.fromARGB(255, 233, 86, 32),
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Color.fromARGB(255, 44, 0, 30),
-          fixedColor: Color.fromARGB(255, 233, 86, 32),
           currentIndex: _index,
           // ignore: prefer_const_constructors
           items: [
@@ -101,4 +132,10 @@ class HomePage extends StatelessWidget {
     );
   } //build
 
+  Future<String?> getName() async {
+    final sp = await SharedPreferences.getInstance();
+    String? name = sp.getString('username');
+    print(sp.toString());
+    return name;
+  }
 } //Page
