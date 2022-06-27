@@ -279,33 +279,37 @@ class Function1Page extends State<StepsPage> {
                   showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
+                      content: StatefulBuilder(builder:
+                          (BuildContext context, StateSetter setState) {
+                        return Column(
+                          children: [
+                            CheckboxListTile(
+                                title: const Text('Average line visibility'),
+                                value: averagePlotVisible,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    averagePlotVisible = value!;
+                                  });
+                                },
+                                secondary: const Icon(Icons.timeline)),
+                            CheckboxListTile(
+                                title: const Text('Step goal line visibility'),
+                                value: goalPlotVisible,
+                                onChanged: (bool? value) {
+                                  setState(() {
+                                    goalPlotVisible = value!;
+                                  });
+                                },
+                                secondary: const Icon(Icons.flag))
+                          ],
+                        );
+                      }),
                       title:
                           const Text('Set the visibility of the chart lines'),
-                      content: Column(
-                        children: [
-                          CheckboxListTile(
-                              title: const Text('Average line visibility'),
-                              value: averagePlotVisible,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  averagePlotVisible = value!;
-                                });
-                              },
-                              secondary: const Icon(Icons.timeline)),
-                          CheckboxListTile(
-                              title: const Text('Step goal line visibility'),
-                              value: goalPlotVisible,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  goalPlotVisible = value!;
-                                });
-                              },
-                              secondary: const Icon(Icons.flag))
-                        ],
-                      ),
                       actions: <Widget>[
                         TextButton(
-                          onPressed: () => {Navigator.pop(context, 'Back')},
+                          onPressed: () =>
+                              {Navigator.pop(context, 'Back'), setState(() {})},
                           child: const Text('Back'),
                         ),
                       ],
