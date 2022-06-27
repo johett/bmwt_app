@@ -6,7 +6,7 @@ import 'package:bmwt_app/screens/calorieshomepage.dart';
 import 'package:bmwt_app/screens/caloriesWSpage.dart';
 import 'package:bmwt_app/screens/caloriesDaypage.dart';
 import 'package:bmwt_app/screens/heartpage.dart';
-import 'package:bmwt_app/screens/function1page.dart';
+import 'package:bmwt_app/screens/StepPage.dart';
 import 'package:bmwt_app/screens/function2page.dart';
 import 'package:bmwt_app/screens/HP2.dart';
 import 'package:bmwt_app/screens/HP3.dart';
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color accent = Color.fromARGB(255, 2, 86, 152);
-    Color base = Color.fromARGB(255, 119, 41, 83);
+    Color base = Colors.white;
     Color darkBase = Color.fromARGB(255, 44, 0, 30);
     Color textColor = Color.fromARGB(255, 174, 167, 159);
     return MaterialApp(
@@ -82,7 +82,7 @@ class MyApp extends StatelessWidget {
         LastWeekHeart.route: (context) => LastWeekHeart(),
         CaloriesWSPage.route: (context) => const CaloriesWSPage(),
         CaloriesDayPage.route: (context) => const CaloriesDayPage(),
-        Function1Page.route: (context) => StepsPage(),
+        StepPage.route: (context) => StepsPage(),
         Function2Page.route: (context) => const Function2Page(),
       },
     );

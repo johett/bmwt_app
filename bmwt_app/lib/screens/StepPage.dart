@@ -18,12 +18,12 @@ class StepsPage extends StatefulWidget {
   static const routename = 'CaloriesHomePage';
 
   @override
-  State<StepsPage> createState() => Function1Page();
+  State<StepsPage> createState() => StepPage();
 }
 
-class Function1Page extends State<StepsPage> {
+class StepPage extends State<StepsPage> {
   static const route = '/function1';
-  static const routename = 'Your Steps Overview';
+  static const routename = 'Daily steps overview';
 
   //this int sets the step goal; default 10000
   double stepGoal = 10000.0;
@@ -51,6 +51,11 @@ class Function1Page extends State<StepsPage> {
   bool averagePlotVisible = true;
   bool goalPlotVisible = true;
 
+//sets the colors of the theme and the text
+  var base = Color.fromARGB(255, 44, 0, 30);
+  var text = Colors.black;
+
+//initializes the page
   @override
   initState() {
     // one API call for getting the data of one week
@@ -65,15 +70,77 @@ class Function1Page extends State<StepsPage> {
     super.initState();
   }
 
+//builds the page
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(Function1Page.routename),
+        title: const Text(
+          StepPage.routename,
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: <Widget>[
+          // top icon for the settings of the chart
+          IconButton(
+            icon: const Icon(
+              Icons.settings,
+              color: Colors.white,
+              size: 30.0,
+            ),
+            tooltip: 'Set your new daily step goal',
+            onPressed: () {
+              setState(() {
+                showDialog<String>(
+                  context: context,
+                  builder: (BuildContext context) => AlertDialog(
+                    content: StatefulBuilder(
+                        builder: (BuildContext context, StateSetter setState) {
+                      return Column(
+                        children: [
+                          CheckboxListTile(
+                              checkColor: base,
+                              title: const Text('Average line visibility'),
+                              value: averagePlotVisible,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  averagePlotVisible = value!;
+                                });
+                              },
+                              secondary: Icon(Icons.timeline, color: base)),
+                          CheckboxListTile(
+                              checkColor: base,
+                              title: const Text('Step goal line visibility'),
+                              value: goalPlotVisible,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  goalPlotVisible = value!;
+                                });
+                              },
+                              secondary: Icon(Icons.flag, color: base))
+                        ],
+                      );
+                    }),
+                    title: const Text('Set the visibility of the chart lines'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () =>
+                            {Navigator.pop(context, 'Back'), setState(() {})},
+                        child: Text(
+                          'Back',
+                          style: TextStyle(color: base),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              });
+            },
+          )
+        ],
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             FutureBuilder(
               future: _Recommendation(),
@@ -115,18 +182,22 @@ class Function1Page extends State<StepsPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SfCartesianChart(
+                            backgroundColor: Colors.white,
                             isTransposed: true,
                             title: ChartTitle(
                                 text: "Daily steps overview of the last 7 days",
-                                textStyle:
-                                    TextStyle(fontWeight: FontWeight.bold)),
+                                textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white)),
                             primaryXAxis: CategoryAxis(labelRotation: 90),
                             primaryYAxis: NumericAxis(
                                 numberFormat: NumberFormat.compact(),
                                 minimum: 0,
                                 maximum: maxChartHeight,
                                 interval: 1000,
-                                title: AxisTitle(text: "Steps"),
+                                title: AxisTitle(
+                                    text: "Steps",
+                                    textStyle: TextStyle(color: Colors.white)),
                                 plotBands: <PlotBand>[
                                   PlotBand(
                                     isVisible: goalPlotVisible,
@@ -148,7 +219,7 @@ class Function1Page extends State<StepsPage> {
                                     end: averageSteps,
                                     shouldRenderAboveSeries: true,
                                     borderWidth: 2,
-                                    borderColor: Colors.grey,
+                                    borderColor: Colors.green,
                                     text: "Average",
                                     horizontalTextAlignment: TextAnchor.end,
                                     verticalTextAlignment: TextAnchor.middle,
@@ -170,7 +241,7 @@ class Function1Page extends State<StepsPage> {
                       ]);
                 } else {
                   return const CircularProgressIndicator(
-                    color: Colors.yellow,
+                    color: Colors.red,
                   );
                 }
               },
@@ -183,14 +254,18 @@ class Function1Page extends State<StepsPage> {
                     children: [
                       Icon(
                         Icons.timeline,
-                        color: Colors.blue,
+                        color: base,
                       ),
                       FutureBuilder(
                         future: _AverageSteps(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return Text(
-                                'Average of last 7 days: ${snapshot.data}');
+                              'Average of last 7 days: ${snapshot.data}',
+                              style: TextStyle(color: text),
+                              //textAlign: TextAlign.center,
+                              overflow: TextOverflow.fade,
+                            );
                           } else {
                             return const CircularProgressIndicator();
                           }
@@ -199,125 +274,85 @@ class Function1Page extends State<StepsPage> {
                     ],
                   );
                 }),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Icon(
-                Icons.directions_walk_rounded,
-                color: Colors.blue,
-              ),
-              FutureBuilder(
-                future: _getTodaysSteps(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Text('Steps today: ${snapshot.data}');
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                },
-              ),
-            ]),
-            FlatButton(
-                // foreground
-                onPressed: () {},
-                child: Row(children: [
-                  Text('Your current step goal is: $stepGoal'),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.flag_circle_rounded,
-                      color: Colors.blue,
-                      size: 50.0,
-                    ),
-                    tooltip: 'Set your new daily step goal',
-                    onPressed: () {
-                      setState(() {
-                        showDialog<String>(
-                          context: context,
-                          builder: (BuildContext context) => AlertDialog(
-                            title: const Text('Set your new step goal here'),
-                            content: TextField(
-                              onChanged: (value) {
-                                setState(() {
-                                  dummyNumber = double.parse(value);
-                                });
-                              },
-                              controller: _textFieldController,
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly
-                              ],
-                              keyboardType: TextInputType.number,
-                              decoration: InputDecoration(
-                                  hintText: "Text Field in Dialog"),
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () =>
-                                    {Navigator.pop(context, 'Cancel')},
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () => setState(() {
-                                  Navigator.pop(context, 'Set new goal');
-                                  stepGoal = dummyNumber;
-                                }),
-                                child: const Text('Set new goal'),
-                              ),
-                            ],
-                          ),
-                        );
-                      });
-                    },
-                  ),
-                ])),
-            IconButton(
-              icon: const Icon(
-                Icons.settings,
-                color: Colors.grey,
-                size: 35.0,
-              ),
-              tooltip: 'Set your new daily step goal',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.directions_walk_rounded,
+                  color: base,
+                ),
+                FutureBuilder(
+                  future: _getTodaysSteps(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text(
+                        'Steps today: ${snapshot.data}',
+                        style: TextStyle(color: text),
+                        //textAlign: TextAlign.center,
+                        overflow: TextOverflow.fade,
+                      );
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  },
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.flag,
+                  color: base,
+                ),
+                Text(
+                  'Your current step goal is: $stepGoal',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+            FloatingActionButton.extended(
+              hoverColor: Colors.white,
+              backgroundColor: Color.fromARGB(255, 44, 0, 30),
               onPressed: () {
                 setState(() {
                   showDialog<String>(
                     context: context,
                     builder: (BuildContext context) => AlertDialog(
-                      content: StatefulBuilder(builder:
-                          (BuildContext context, StateSetter setState) {
-                        return Column(
-                          children: [
-                            CheckboxListTile(
-                                title: const Text('Average line visibility'),
-                                value: averagePlotVisible,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    averagePlotVisible = value!;
-                                  });
-                                },
-                                secondary: const Icon(Icons.timeline)),
-                            CheckboxListTile(
-                                title: const Text('Step goal line visibility'),
-                                value: goalPlotVisible,
-                                onChanged: (bool? value) {
-                                  setState(() {
-                                    goalPlotVisible = value!;
-                                  });
-                                },
-                                secondary: const Icon(Icons.flag))
-                          ],
-                        );
-                      }),
-                      title:
-                          const Text('Set the visibility of the chart lines'),
+                      title: const Text('Set your new step goal here'),
+                      content: TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            dummyNumber = double.parse(value);
+                          });
+                        },
+                        controller: _textFieldController,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        keyboardType: TextInputType.number,
+                        decoration:
+                            InputDecoration(hintText: "Text Field in Dialog"),
+                      ),
                       actions: <Widget>[
                         TextButton(
-                          onPressed: () =>
-                              {Navigator.pop(context, 'Back'), setState(() {})},
-                          child: const Text('Back'),
+                          onPressed: () => {Navigator.pop(context, 'Cancel')},
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () => setState(() {
+                            Navigator.pop(context, 'Set new goal');
+                            stepGoal = dummyNumber;
+                          }),
+                          child: const Text('Set new goal'),
                         ),
                       ],
                     ),
                   );
                 });
               },
-            ),
+              label: const Text('Change goal'),
+            )
           ],
         ),
       ),
@@ -358,7 +393,7 @@ class Function1Page extends State<StepsPage> {
         max = fitbitActivityData[i].value!;
       }
     }
-    maxChartHeight = max.round() + 1000;
+    maxChartHeight = max.round() + 2000;
     return fitbitActivityData;
   }
 
@@ -397,7 +432,7 @@ class Function1Page extends State<StepsPage> {
     if (today! < stepGoal) {
       return "You have still some steps to walk to reach your personal step goal. Let's go!";
     } else {
-      return "Hurray, your reached your average steps! Keep going to reach your daily goal!";
+      return "Hurray, your reached your personal step goal!";
     }
   }
 }

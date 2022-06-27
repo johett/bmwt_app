@@ -51,7 +51,7 @@ flutter:
   fonts:
   - family:  MyFlutterApp
     fonts:
-     - asset: lib\assets\customIcons\MyFlutterApp.ttf
+     - asset: lib/assets/customIcons/MyFlutterApp.ttf
 
 
 #* Font Awesome 4, Copyright (C) 2016 by Dave Gandy

@@ -82,7 +82,7 @@ class _ChangeHeartGoalsState extends State<ChangeHeartGoals> {
                   );
                 } else {
                   return Scaffold(
-                    body: Center(child: Text('Therewas an error')),
+                    body: Center(child: Text('There was an error')),
                   );
                 }
               });

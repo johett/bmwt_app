@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:bmwt_app/screens/loginpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bmwt_app/screens/calorieswspage.dart';
-import 'package:bmwt_app/screens/function1page.dart';
+import 'package:bmwt_app/screens/StepPage.dart';
 import 'package:bmwt_app/screens/function2page.dart';
 import 'package:bmwt_app/screens/HP2.dart';
 import 'package:bmwt_app/screens/HP3.dart';
@@ -53,13 +53,13 @@ class HomePage extends StatelessWidget {
                 return Text('Welcome back ${name}',
                     style: TextStyle(
                       fontSize: 36,
-                      color: Color.fromARGB(255, 174, 167, 159),
+                      color: Colors.white,
                     ));
               } else {
                 return Text('Welcome back',
                     style: TextStyle(
                       fontSize: 36,
-                      color: Color.fromARGB(255, 174, 167, 159),
+                      color: Colors.white,
                     ));
               }
             },
@@ -79,8 +79,8 @@ class HomePage extends StatelessWidget {
               label: 'Heart',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+              icon: Icon(Icons.directions_walk),
+              label: 'Steps',
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.settings),
@@ -99,7 +99,7 @@ class HomePage extends StatelessWidget {
               Navigator.pushNamed(context, HP3.route);
             }
             if (index == 2) {
-              Navigator.pushNamed(context, Function1Page.route);
+              Navigator.pushNamed(context, StepPage.route);
             }
             if (index == 3) {
               Navigator.pushNamed(context, ChangeHeartGoals.route);
