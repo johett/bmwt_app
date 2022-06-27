@@ -1,3 +1,4 @@
+import 'package:bmwt_app/database/database.dart';
 import 'package:bmwt_app/utility/credentials.dart';
 import 'package:fitbitter/fitbitter.dart';
 import 'package:flutter/material.dart';
@@ -59,14 +60,50 @@ class HomePage extends StatelessWidget {
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
               
-              onTap: () async{
-                final sp = await SharedPreferences.getInstance();
-                sp.remove('username');
-                await FitbitConnector.unauthorize(
-                  clientID: FitbitAppCredentials.clientID,
-                  clientSecret: FitbitAppCredentials.clientSecret,
-                  );
-                Navigator.of(context).pushReplacementNamed(LoginPage.route);
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('Logout'),
+                    content: Text('Are you sure you want to Logout? All your data will be lost!'),
+                    actions: [
+                      TextButton(
+                        onPressed:(){
+                          Navigator.pop(context);
+                        },
+                        child: 
+                          Text('No'),
+                      ),
+                      TextButton(
+                        onPressed:() async{
+                          final sp = await SharedPreferences.getInstance();
+                          sp.remove('username');
+                          await FitbitConnector.unauthorize(
+                            clientID: FitbitAppCredentials.clientID,
+                            clientSecret: FitbitAppCredentials.clientSecret,
+                          );
+
+                        //to make the database empty when the user logout
+                        final AppDatabase database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+                        final calorieswsDao = database.caloriesWSDao;
+                        final dataToDeleteWS = await calorieswsDao.findAllCaloriesWS();
+                        for(var item in dataToDeleteWS){
+                          await calorieswsDao.deleteCaloriesWS(item);
+                        }
+                        final caloriesdayDao = database.caloriesDayDao;
+                        final dataToDeleteDay = await caloriesdayDao.findAllCaloriesDay();
+                        for(var item in dataToDeleteDay){
+                          await caloriesdayDao.deleteCaloriesDay(item);
+                        }
+
+                          Navigator.of(context).pushReplacementNamed(LoginPage.route);
+                        },
+                        child: 
+                          Text('Yes'),
+                      )
+                    ],
+                  )
+                );
               },
             ),
           ],

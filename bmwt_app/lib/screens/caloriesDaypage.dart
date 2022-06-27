@@ -20,6 +20,7 @@ class CaloriesDayPage extends StatelessWidget {
     final measBMR = i.caloriesBMR;
     
     return Scaffold(
+      backgroundColor: Colors.blue,
       appBar: AppBar(
         title: const Text(CaloriesDayPage.routename),
       ),
@@ -31,17 +32,21 @@ class CaloriesDayPage extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final data = snapshot.data as List<CaloriesDay>;
-                return ListView.builder(
+                return ListView.separated(
+                     separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.blue, thickness: 10,),
                     itemCount: data.length,
                     itemBuilder: (context, index) {
                       final caloriesDay = data[index];
                       return ListTile(
+                            tileColor: Color(0xFFFFE082),
+                            style: ListTileStyle.list,
+                            leading: Text('${index+1}', style: TextStyle(color: Colors.blue, fontSize: 20) ),
                             title: Text('Day: ${caloriesDay.day.day}/${caloriesDay.day.month}/${caloriesDay.day.year}'),
                             subtitle: (caloriesDay.activityCalories==null)?
                                 const Text('No data avaiables'):
                                 ((caloriesDay.activityCalories!+measBMR)>dietCalories)?
-                                  Text('Deficit of ${(caloriesDay.activityCalories!+measBMR-dietCalories).toInt()} kcal'):
-                                  Text('Surplus of ${(dietCalories-caloriesDay.activityCalories!-measBMR).toInt()} kcal'),
+                                  Text('Deficit of ${(caloriesDay.activityCalories!+measBMR-dietCalories).toInt()} kcal',style: TextStyle(color: Colors.red)):
+                                  Text('Surplus of ${(dietCalories-caloriesDay.activityCalories!-measBMR).toInt()} kcal',style: TextStyle(color: Colors.green)),
                           );
                     }
                   );
