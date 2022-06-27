@@ -28,6 +28,8 @@ class Function1Page extends State<StepsPage> {
   //this int sets the step goal; default 10000
   double stepGoal = 10000.0;
   double dummyNumber = 0;
+  bool dummyForPlot1 = true;
+  bool dummyForPlot2 = true;
 
   late List<ChartData> data = [];
 
@@ -44,6 +46,10 @@ class Function1Page extends State<StepsPage> {
 //variables for the steps
   double averageSteps = 0.0;
   double todaysSteps = 0.0;
+
+  // var for visibility of plots in the chart
+  bool averagePlotVisible = true;
+  bool goalPlotVisible = true;
 
   @override
   initState() {
@@ -123,22 +129,24 @@ class Function1Page extends State<StepsPage> {
                                 title: AxisTitle(text: "Steps"),
                                 plotBands: <PlotBand>[
                                   PlotBand(
-                                    isVisible: true,
+                                    isVisible: goalPlotVisible,
                                     start: stepGoal,
                                     end: stepGoal,
                                     borderWidth: 2,
                                     borderColor: Colors.blue,
                                     text: "Your personal goal",
                                     textAngle: 0,
+                                    shouldRenderAboveSeries: true,
                                     horizontalTextAlignment: TextAnchor.end,
                                     verticalTextAlignment: TextAnchor.middle,
                                     textStyle: TextStyle(
                                         color: Colors.blue, fontSize: 12),
                                   ),
                                   PlotBand(
-                                    isVisible: true,
+                                    isVisible: averagePlotVisible,
                                     start: averageSteps,
                                     end: averageSteps,
+                                    shouldRenderAboveSeries: true,
                                     borderWidth: 2,
                                     borderColor: Colors.grey,
                                     text: "Average",
@@ -259,6 +267,53 @@ class Function1Page extends State<StepsPage> {
                     },
                   ),
                 ])),
+            IconButton(
+              icon: const Icon(
+                Icons.settings,
+                color: Colors.grey,
+                size: 35.0,
+              ),
+              tooltip: 'Set your new daily step goal',
+              onPressed: () {
+                setState(() {
+                  showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) => AlertDialog(
+                      title:
+                          const Text('Set the visibility of the chart lines'),
+                      content: Column(
+                        children: [
+                          CheckboxListTile(
+                              title: const Text('Average line visibility'),
+                              value: averagePlotVisible,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  averagePlotVisible = value!;
+                                });
+                              },
+                              secondary: const Icon(Icons.timeline)),
+                          CheckboxListTile(
+                              title: const Text('Step goal line visibility'),
+                              value: goalPlotVisible,
+                              onChanged: (bool? value) {
+                                setState(() {
+                                  goalPlotVisible = value!;
+                                });
+                              },
+                              secondary: const Icon(Icons.flag))
+                        ],
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () => {Navigator.pop(context, 'Back')},
+                          child: const Text('Back'),
+                        ),
+                      ],
+                    ),
+                  );
+                });
+              },
+            ),
           ],
         ),
       ),
