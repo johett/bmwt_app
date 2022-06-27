@@ -1,10 +1,11 @@
 import 'package:bmwt_app/database/database.dart';
 import 'package:bmwt_app/database/entities/caloriesDay.dart';
 import 'package:bmwt_app/database/entities/caloriesWS.dart';
+import 'package:bmwt_app/database/entities/heart.dart';
+import 'package:bmwt_app/database/entities/heartGoals.dart';
 import 'package:flutter/material.dart';
 
-class DatabaseRepository extends ChangeNotifier{
-
+class DatabaseRepository extends ChangeNotifier {
   //The state of the database is just the AppDatabase
   final AppDatabase database;
 
@@ -12,23 +13,23 @@ class DatabaseRepository extends ChangeNotifier{
   DatabaseRepository({required this.database});
 
   //*********************CaloriesWS************************ */
-
+//*
   //This method wraps the findAllCaloriesWS() method of the DAO
-  Future<List<CaloriesWS>> findAllCaloriesWS() async{
+  Future<List<CaloriesWS>> findAllCaloriesWS() async {
     final results = await database.caloriesWSDao.findAllCaloriesWS();
     return results;
   }
 
-  //This method wraps the insertCaloriesWS() method of the DAO. 
+  //This method wraps the insertCaloriesWS() method of the DAO.
   //Then, it notifies the listeners that something changed.
-  Future<void> insertCaloriesWS(CaloriesWS caloriesWS)async {
+  Future<void> insertCaloriesWS(CaloriesWS caloriesWS) async {
     await database.caloriesWSDao.insertCaloriesWS(caloriesWS);
     notifyListeners();
   }
 
-  //This method wraps the deleteCaloriesWS() method of the DAO. 
+  //This method wraps the deleteCaloriesWS() method of the DAO.
   //Then, it notifies the listeners that something changed.
-  Future<void> removeCaloriesWS(CaloriesWS caloriesWS) async{
+  Future<void> removeCaloriesWS(CaloriesWS caloriesWS) async {
     await database.caloriesWSDao.deleteCaloriesWS(caloriesWS);
     notifyListeners();
   }
@@ -36,11 +37,10 @@ class DatabaseRepository extends ChangeNotifier{
   //*********************CaloriesDay************************ */
 
   //This method wraps the findAllCaloriesDay() method of the DAO
-  Future<List<CaloriesDay>> findAllCaloriesDay() async{
+  Future<List<CaloriesDay>> findAllCaloriesDay() async {
     final results = await database.caloriesDayDao.findAllCaloriesDay();
     return results;
   }
-
 
   //This method wraps the findAllCaloriesDayOfAWeek() method of the DAO
   Future<List<CaloriesDay>> findAllCaloriesDayOfAWeek(int idWeek) {
@@ -48,18 +48,54 @@ class DatabaseRepository extends ChangeNotifier{
     return results;
   }
 
-
-  //This method wraps the insertCaloriesDay() method of the DAO. 
+  //This method wraps the insertCaloriesDay() method of the DAO.
   //Then, it notifies the listeners that something changed.
-  Future<void> insertCaloriesDay(CaloriesDay caloriesDay)async {
+  Future<void> insertCaloriesDay(CaloriesDay caloriesDay) async {
     await database.caloriesDayDao.insertCaloriesDay(caloriesDay);
     //notifyListeners();
   }
 
-  //This method wraps the deleteCaloriesDay() method of the DAO. 
+  //This method wraps the deleteCaloriesDay() method of the DAO.
   //Then, it notifies the listeners that something changed.
-  Future<void> deleteCaloriesDay(CaloriesDay caloriesDay) async{
+  Future<void> deleteCaloriesDay(CaloriesDay caloriesDay) async {
     await database.caloriesDayDao.deleteCaloriesDay(caloriesDay);
     //notifyListeners();
   }
-}//DatabaseRepository
+
+//*********************Heart************************ */
+  Future<Heart?> getHeartByDay(String dateTime) async {
+    final heart = await database.heartDao.getHeartByDate(dateTime);
+    return heart;
+    //notifyListeners();
+  }
+
+  Future<void> insertHeart(Heart heart) async {
+    await database.heartDao.insertHeart(heart);
+    notifyListeners();
+  }
+
+  Future<void> deleteHeart(Heart heart) async {
+    await database.heartDao.deleteHeart(heart);
+  }
+
+  //*********************HeartGoals************************ */
+  Future<List<HeartGoals>> getHeartGoals() async {
+    final heart = await database.heartGoalsDao.getHeartGoals();
+    return heart;
+    //notifyListeners();
+  }
+
+  Future<void> updateHeartGoals(HeartGoals heartGoals) async {
+    await database.heartGoalsDao.updateHeartGoals(heartGoals);
+    notifyListeners();
+  }
+
+  Future<void> deleteHeartGoals(HeartGoals heartGoals) async {
+    await database.heartGoalsDao.deleteHeartGoals(heartGoals);
+  }
+
+  Future<void> insertHeartGoals(HeartGoals heartGoals) async {
+    await database.heartGoalsDao.insertHeartGoals(heartGoals);
+    notifyListeners();
+  }
+} //DatabaseRepository

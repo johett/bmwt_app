@@ -1,16 +1,22 @@
+import 'package:bmwt_app/screens/changeHeartGoals.dart';
+import 'package:bmwt_app/screens/dbTest.dart';
 import 'package:bmwt_app/screens/homepage.dart';
 import 'package:bmwt_app/screens/loginpage.dart';
 import 'package:bmwt_app/screens/calorieshomepage.dart';
 import 'package:bmwt_app/screens/caloriesWSpage.dart';
 import 'package:bmwt_app/screens/caloriesDaypage.dart';
+import 'package:bmwt_app/screens/heartpage.dart';
 import 'package:bmwt_app/screens/function1page.dart';
 import 'package:bmwt_app/screens/function2page.dart';
+import 'package:bmwt_app/screens/HP2.dart';
+import 'package:bmwt_app/screens/HP3.dart';
+import 'package:bmwt_app/screens/lastWeekHeart.dart';
 import 'package:flutter/material.dart';
 import 'package:bmwt_app/database/database.dart';
 import 'package:bmwt_app/repositories/databaseRepository.dart';
 import 'package:provider/provider.dart';
 
-void main() async {
+Future<void> main() async {
   //This is a special method that use WidgetFlutterBinding to interact with the Flutter engine.
   //This is needed when you need to interact with the native core of the app.
   //Here, we need it since when need to initialize the DB before running the app.
@@ -25,7 +31,7 @@ void main() async {
   //That instance will be then shared through the platform and will be unique.
   runApp(ChangeNotifierProvider<DatabaseRepository>(
     create: (context) => databaseRepository,
-    child: const MyApp(),
+    child: MyApp(),
   ));
 } //main
 
@@ -33,7 +39,33 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    Color accent = Color.fromARGB(255, 2, 86, 152);
+    Color base = Color.fromARGB(255, 119, 41, 83);
+    Color darkBase = Color.fromARGB(255, 44, 0, 30);
+    Color textColor = Color.fromARGB(255, 174, 167, 159);
     return MaterialApp(
+      theme: ThemeData(
+          focusColor: accent,
+          primaryColor: base,
+          primaryColorDark: darkBase,
+          scaffoldBackgroundColor: base,
+          bottomAppBarColor: darkBase,
+          backgroundColor: base,
+          appBarTheme: AppBarTheme(
+              color: darkBase,
+              titleTextStyle: TextStyle(color: accent, fontSize: 26)),
+          iconTheme: IconThemeData(color: accent),
+          textTheme: TextTheme(
+              //Changes text data
+              bodyText2: TextStyle(fontSize: 16, color: textColor)),
+          progressIndicatorTheme: ProgressIndicatorThemeData(color: accent),
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            backgroundColor: darkBase,
+            selectedItemColor: accent,
+            unselectedItemColor: accent,
+            type: BottomNavigationBarType.fixed,
+          )),
+
       //Approach 2:
       //This specifies the app entrypoint
       initialRoute: LoginPage.route,
@@ -42,6 +74,12 @@ class MyApp extends StatelessWidget {
         LoginPage.route: (context) => const LoginPage(),
         HomePage.route: (context) => const HomePage(),
         CaloriesHomePage.route: (context) => const CaloriesHomePage(),
+        HeartPage.route: (context) => HeartPage(),
+        HP2.route: (context) => HP2(),
+        HP3.route: (context) => HP3(),
+        ChangeHeartGoals.route: (context) => ChangeHeartGoals(),
+        DBTest.route: (context) => DBTest(),
+        LastWeekHeart.route: (context) => LastWeekHeart(),
         CaloriesWSPage.route: (context) => const CaloriesWSPage(),
         CaloriesDayPage.route: (context) => const CaloriesDayPage(),
         Function1Page.route: (context) => StepsPage(),

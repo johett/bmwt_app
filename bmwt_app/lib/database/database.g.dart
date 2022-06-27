@@ -65,6 +65,10 @@ class _$AppDatabase extends AppDatabase {
 
   CaloriesDayDao? _caloriesDayDaoInstance;
 
+  HeartDao? _heartDaoInstance;
+
+  HeartGoalsDao? _heartGoalsDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -84,9 +88,13 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
+            'CREATE TABLE IF NOT EXISTS `HeartGoals` (`id` INTEGER NOT NULL, `goalCalories` INTEGER NOT NULL, `minutesCardio` INTEGER NOT NULL, `minutesPeak` INTEGER NOT NULL, `minutesBurningFat` INTEGER NOT NULL, PRIMARY KEY (`id`))');
+        await database.execute(
             'CREATE TABLE IF NOT EXISTS `CaloriesWS` (`id` INTEGER NOT NULL, `startDay` INTEGER NOT NULL, `lastDay` INTEGER NOT NULL, `activityCalories` REAL, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `CaloriesDay` (`idWeek` INTEGER NOT NULL, `idDayOfTheWeek` INTEGER NOT NULL, `startDay` INTEGER NOT NULL, `lastDay` INTEGER NOT NULL, `day` INTEGER NOT NULL, `activityCalories` REAL, PRIMARY KEY (`idWeek`, `idDayOfTheWeek`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `Heart` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `heartBeat` INTEGER, `dateTime` TEXT NOT NULL, `minutesCardio` INTEGER)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -103,6 +111,16 @@ class _$AppDatabase extends AppDatabase {
   CaloriesDayDao get caloriesDayDao {
     return _caloriesDayDaoInstance ??=
         _$CaloriesDayDao(database, changeListener);
+  }
+
+  @override
+  HeartDao get heartDao {
+    return _heartDaoInstance ??= _$HeartDao(database, changeListener);
+  }
+
+  @override
+  HeartGoalsDao get heartGoalsDao {
+    return _heartGoalsDaoInstance ??= _$HeartGoalsDao(database, changeListener);
   }
 }
 
@@ -233,6 +251,160 @@ class _$CaloriesDayDao extends CaloriesDayDao {
   @override
   Future<void> deleteCaloriesDay(CaloriesDay caloriesDay) async {
     await _caloriesDayDeletionAdapter.delete(caloriesDay);
+  }
+}
+
+class _$HeartDao extends HeartDao {
+  _$HeartDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _heartInsertionAdapter = InsertionAdapter(
+            database,
+            'Heart',
+            (Heart item) => <String, Object?>{
+                  'id': item.id,
+                  'heartBeat': item.heartBeat,
+                  'dateTime': item.dateTime,
+                  'minutesCardio': item.minutesCardio
+                }),
+        _heartDeletionAdapter = DeletionAdapter(
+            database,
+            'Heart',
+            ['id'],
+            (Heart item) => <String, Object?>{
+                  'id': item.id,
+                  'heartBeat': item.heartBeat,
+                  'dateTime': item.dateTime,
+                  'minutesCardio': item.minutesCardio
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Heart> _heartInsertionAdapter;
+
+  final DeletionAdapter<Heart> _heartDeletionAdapter;
+
+  @override
+  Future<List<Heart>> findAllHearts() async {
+    return _queryAdapter.queryList('SELECT * FROM Heart',
+        mapper: (Map<String, Object?> row) => Heart(
+            row['id'] as int?,
+            row['heartBeat'] as int?,
+            row['dateTime'] as String,
+            row['minutesCardio'] as int?));
+  }
+
+  @override
+  Future<Heart?> getHeartByDate(String dateTime) async {
+    return _queryAdapter.query('SELECT * From Heart WHERE dateTime = ?1',
+        mapper: (Map<String, Object?> row) => Heart(
+            row['id'] as int?,
+            row['heartBeat'] as int?,
+            row['dateTime'] as String,
+            row['minutesCardio'] as int?),
+        arguments: [dateTime]);
+  }
+
+  @override
+  Future<void> insertHeart(Heart heart) async {
+    await _heartInsertionAdapter.insert(heart, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteHeart(Heart heart) async {
+    await _heartDeletionAdapter.delete(heart);
+  }
+}
+
+class _$HeartGoalsDao extends HeartGoalsDao {
+  _$HeartGoalsDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _heartGoalsInsertionAdapter = InsertionAdapter(
+            database,
+            'HeartGoals',
+            (HeartGoals item) => <String, Object?>{
+                  'id': item.id,
+                  'goalCalories': item.goalCalories,
+                  'minutesCardio': item.minutesCardio,
+                  'minutesPeak': item.minutesPeak,
+                  'minutesBurningFat': item.minutesBurningFat
+                }),
+        _heartGoalsUpdateAdapter = UpdateAdapter(
+            database,
+            'HeartGoals',
+            ['id'],
+            (HeartGoals item) => <String, Object?>{
+                  'id': item.id,
+                  'goalCalories': item.goalCalories,
+                  'minutesCardio': item.minutesCardio,
+                  'minutesPeak': item.minutesPeak,
+                  'minutesBurningFat': item.minutesBurningFat
+                }),
+        _heartGoalsDeletionAdapter = DeletionAdapter(
+            database,
+            'HeartGoals',
+            ['id'],
+            (HeartGoals item) => <String, Object?>{
+                  'id': item.id,
+                  'goalCalories': item.goalCalories,
+                  'minutesCardio': item.minutesCardio,
+                  'minutesPeak': item.minutesPeak,
+                  'minutesBurningFat': item.minutesBurningFat
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<HeartGoals> _heartGoalsInsertionAdapter;
+
+  final UpdateAdapter<HeartGoals> _heartGoalsUpdateAdapter;
+
+  final DeletionAdapter<HeartGoals> _heartGoalsDeletionAdapter;
+
+  @override
+  Future<List<HeartGoals>> getHeartGoals() async {
+    return _queryAdapter.queryList('SELECT * FROM HeartGoals',
+        mapper: (Map<String, Object?> row) => HeartGoals(
+            row['id'] as int,
+            row['goalCalories'] as int,
+            row['minutesCardio'] as int,
+            row['minutesPeak'] as int,
+            row['minutesBurningFat'] as int));
+  }
+
+  @override
+  Future<List<HeartGoals>> getHeartGoalsbyID(int id) async {
+    return _queryAdapter.queryList('SELECT * FROM HeartGoals WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => HeartGoals(
+            row['id'] as int,
+            row['goalCalories'] as int,
+            row['minutesCardio'] as int,
+            row['minutesPeak'] as int,
+            row['minutesBurningFat'] as int),
+        arguments: [id]);
+  }
+
+  @override
+  Future<void> insertHeartGoals(HeartGoals heartGoals) async {
+    await _heartGoalsInsertionAdapter.insert(
+        heartGoals, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> updateHeartGoals(HeartGoals heartGoals) async {
+    await _heartGoalsUpdateAdapter.update(
+        heartGoals, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> deleteHeartGoals(HeartGoals heartGoals) async {
+    await _heartGoalsDeletionAdapter.delete(heartGoals);
   }
 }
 
