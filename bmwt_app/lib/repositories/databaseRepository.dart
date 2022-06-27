@@ -2,7 +2,7 @@ import 'package:bmwt_app/database/database.dart';
 import 'package:bmwt_app/database/entities/caloriesDay.dart';
 import 'package:bmwt_app/database/entities/caloriesWS.dart';
 import 'package:bmwt_app/database/entities/heart.dart';
-import 'package:bmwt_app/database/entities/heartgoals.dart';
+import 'package:bmwt_app/database/entities/heartGoals.dart';
 import 'package:flutter/material.dart';
 
 class DatabaseRepository extends ChangeNotifier {
@@ -13,7 +13,7 @@ class DatabaseRepository extends ChangeNotifier {
   DatabaseRepository({required this.database});
 
   //*********************CaloriesWS************************ */
-
+//*
   //This method wraps the findAllCaloriesWS() method of the DAO
   Future<List<CaloriesWS>> findAllCaloriesWS() async {
     final results = await database.caloriesWSDao.findAllCaloriesWS();
@@ -85,12 +85,17 @@ class DatabaseRepository extends ChangeNotifier {
     //notifyListeners();
   }
 
-  Future<void> updateHeartGoals(HeartGoals heart) async {
-    await database.heartGoalsDao.updateHeartGoals(heart);
+  Future<void> updateHeartGoals(HeartGoals heartGoals) async {
+    await database.heartGoalsDao.updateHeartGoals(heartGoals);
     notifyListeners();
   }
 
-  Future<void> deleteHeartGoals(HeartGoals heart) async {
-    await database.heartGoalsDao.deleteHeartGoals(heart);
+  Future<void> deleteHeartGoals(HeartGoals heartGoals) async {
+    await database.heartGoalsDao.deleteHeartGoals(heartGoals);
+  }
+
+  Future<void> insertHeartGoals(HeartGoals heartGoals) async {
+    await database.heartGoalsDao.insertHeartGoals(heartGoals);
+    notifyListeners();
   }
 } //DatabaseRepository

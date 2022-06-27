@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bmwt_app/repositories/databaseRepository.dart';
-import 'package:bmwt_app/database/entities/heartgoals.dart';
+import 'package:bmwt_app/database/entities/heartGoals.dart';
+import 'package:bmwt_app/database/database.dart';
+import 'package:bmwt_app/repositories/databaseRepository.dart';
+import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart' as sqflite;
 
 class DBTest extends StatelessWidget {
   DBTest({Key? key}) : super(key: key);
@@ -20,7 +24,7 @@ class DBTest extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final data = snapshot.data as List<HeartGoals>;
-                  return Text(data[0].calories.toString());
+                  return Text(data[0].minutesPeak.toString());
                 } else
                   return Text("ERROR");
               });
@@ -28,6 +32,4 @@ class DBTest extends StatelessWidget {
       )),
     );
   }
-  // functions
-
 } //Page

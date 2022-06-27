@@ -12,6 +12,7 @@ import 'package:bmwt_app/screens/HP2.dart';
 import 'package:bmwt_app/screens/HP3.dart';
 import 'package:bmwt_app/screens/DBTest.dart';
 import 'package:bmwt_app/assets/customIcons/my_flutter_app_icons.dart';
+import 'package:bmwt_app/screens/changeHeartGoals.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -64,6 +65,9 @@ class HomePage extends StatelessWidget {
             }
             if (index == 1) {
               Navigator.pushNamed(context, HP3.route);
+            }
+            if (index == 3) {
+              Navigator.pushNamed(context, ChangeHeartGoals.route);
             }
             if (index == 4) {
               Navigator.pushNamed(context, DBTest.route);

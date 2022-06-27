@@ -11,8 +11,9 @@ import 'package:bmwt_app/database/daos/caloriesDayDao.dart';
 import 'package:bmwt_app/database/entities/caloriesDay.dart';
 import 'package:bmwt_app/database/entities/heart.dart';
 import 'package:bmwt_app/database/daos/heartDao.dart';
-import 'package:bmwt_app/database/entities/heartgoals.dart';
 import 'package:bmwt_app/database/daos/heartGoalsDao.dart';
+import 'package:bmwt_app/database/entities/heartGoals.dart';
+
 //The generated code will be in database.g.dart
 part 'database.g.dart';
 
@@ -20,7 +21,12 @@ part 'database.g.dart';
 //We also added a TypeConverter to manage the DateTime of a Meal entry, since DateTimes are not natively
 //supported by Floor.
 @TypeConverters([DateTimeConverter])
-@Database(version: 1, entities: [CaloriesWS, CaloriesDay, Heart, HeartGoals])
+@Database(version: 1, entities: [
+  HeartGoals,
+  CaloriesWS,
+  CaloriesDay,
+  Heart,
+])
 abstract class AppDatabase extends FloorDatabase {
   //Add all the daos as getters here
   CaloriesWSDao get caloriesWSDao;

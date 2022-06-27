@@ -1,11 +1,15 @@
+import 'package:bmwt_app/database/entities/heartGoals.dart';
 import 'package:bmwt_app/screens/lastWeekHeart.dart';
 import 'package:bmwt_app/utility/credentials.dart';
 import 'package:fitbitter/fitbitter.dart';
 import 'package:flutter/material.dart';
 import 'package:bmwt_app/screens/loginpage.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bmwt_app/assets/customIcons/my_flutter_app_icons.dart';
+
+import '../repositories/databaseRepository.dart';
 
 class HP3 extends StatelessWidget {
   HP3({Key? key}) : super(key: key);
@@ -73,16 +77,37 @@ class Page extends StatelessWidget {
   Page(this.h) {}
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        HeartRateWidget(h.restingHeartRate.toString()),
-        CaloriesCardioWidget(h.caloriesCardio.toString()),
-        MinutesCardioWidget(h.minutesCardio.toString()),
-        MinutesPeakWidget(h.minutesPeak.toString()),
-        MinutesFatBurnWidget(h.minutesFatBurn.toString())
-      ],
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Scaffold(
+      body: Center(
+          child: Consumer<DatabaseRepository>(builder: ((context, dbr, child) {
+        return FutureBuilder(
+            initialData: null,
+            future: dbr.getHeartGoals(),
+            builder: ((context, snapshot) {
+              if (snapshot.hasData) {
+                var goals = snapshot.data as List<HeartGoals>;
+                return Column(
+                  children: [
+                    HeartRateWidget(h.restingHeartRate.toString()),
+                    CaloriesCardioWidget(h.caloriesCardio.toString(),
+                        goals[0].goalCalories.toDouble()),
+                    MinutesCardioWidget(h.minutesCardio.toString(),
+                        goals[0].minutesCardio.toDouble()),
+                    MinutesPeakWidget(h.minutesPeak.toString(),
+                        goals[0].minutesPeak.toDouble()),
+                    MinutesFatBurnWidget(h.minutesFatBurn.toString(),
+                        goals[0].minutesBurningFat.toDouble())
+                  ],
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                );
+              } else
+                return Scaffold(
+                    body: Center(
+                  child: CircularProgressIndicator(),
+                ));
+            }));
+      }))),
     );
   }
 }
@@ -125,9 +150,10 @@ class HeartRateWidget extends StatelessWidget {
 class MinutesCardioWidget extends StatelessWidget {
   final String minutesCardio;
   double progress = 0;
-  MinutesCardioWidget(this.minutesCardio) {
+  double goal;
+  MinutesCardioWidget(this.minutesCardio, this.goal) {
     progress = double.parse(minutesCardio);
-    progress = progress / 30;
+    progress = progress / goal;
     if (progress >= 1) {
       progress = 1;
     }
@@ -156,9 +182,10 @@ class MinutesCardioWidget extends StatelessWidget {
 class CaloriesCardioWidget extends StatelessWidget {
   final String caloriesCardio;
   double progress = 0;
-  CaloriesCardioWidget(this.caloriesCardio) {
+  double goal;
+  CaloriesCardioWidget(this.caloriesCardio, this.goal) {
     progress = double.parse(caloriesCardio);
-    progress = progress / 300;
+    progress = progress / goal;
     if (progress >= 1) {
       progress = 1;
     }
@@ -188,9 +215,10 @@ class CaloriesCardioWidget extends StatelessWidget {
 class MinutesPeakWidget extends StatelessWidget {
   final String minutesPeak;
   double progress = 0;
-  MinutesPeakWidget(this.minutesPeak) {
+  double goal;
+  MinutesPeakWidget(this.minutesPeak, this.goal) {
     progress = double.parse(minutesPeak);
-    progress = progress / 15;
+    progress = progress / goal;
     if (progress >= 1) {
       progress = 1;
     }
@@ -219,12 +247,14 @@ class MinutesPeakWidget extends StatelessWidget {
 class MinutesFatBurnWidget extends StatelessWidget {
   final String minutesFatBurn;
   double progress = 0;
-  MinutesFatBurnWidget(this.minutesFatBurn) {
+  double goal;
+  MinutesFatBurnWidget(this.minutesFatBurn, this.goal) {
     progress = double.parse(minutesFatBurn);
-    progress = progress / 5;
+    progress = progress / goal;
     if (progress >= 1) {
       progress = 1;
     }
+    print('fatgoal ${goal}');
   }
 
   @override

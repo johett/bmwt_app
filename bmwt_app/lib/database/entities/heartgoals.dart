@@ -1,14 +1,18 @@
 import 'package:floor/floor.dart';
 
-@entity
+//Here, we are saying to floor that this is a class that defines an entity
+
+@Entity(primaryKeys: ['id'])
 class HeartGoals {
-  @PrimaryKey(autoGenerate: true)
-  final int? id;
-  final int calories;
+  //the identifier of the week to which this day belong
+  final int id;
+  //the identifier of the day of the week
+  final int goalCalories;
+  final int minutesCardio;
   final int minutesPeak;
   final int minutesBurningFat;
-  final int minutesCardio;
 
-  HeartGoals(this.id, this.calories, this.minutesBurningFat, this.minutesPeak,
-      this.minutesCardio);
-}//Heart
+  //Default constructor
+  HeartGoals(this.id, this.goalCalories, this.minutesCardio, this.minutesPeak,
+      this.minutesBurningFat);
+}//CaloriesWS
