@@ -52,8 +52,10 @@ class StepPage extends State<StepsPage> {
   bool goalPlotVisible = true;
 
 //sets the colors of the theme and the text
-  var base = Color.fromARGB(255, 44, 0, 30);
-  var text = Colors.black;
+
+  var baseColor = Color.fromARGB(255, 99, 0, 68);
+  var textColor = Color.fromARGB(255, 61, 58, 55);
+  var blueElements = Color.fromARGB(255, 22, 102, 168);
 
 //initializes the page
   @override
@@ -67,6 +69,7 @@ class StepPage extends State<StepsPage> {
       color: Colors.grey,
       header: "Daily steps",
     );
+
     super.initState();
   }
 
@@ -98,7 +101,8 @@ class StepPage extends State<StepsPage> {
                       return Column(
                         children: [
                           CheckboxListTile(
-                              checkColor: base,
+                              checkColor: Colors.white,
+                              activeColor: baseColor,
                               title: const Text('Average line visibility'),
                               value: averagePlotVisible,
                               onChanged: (bool? value) {
@@ -106,9 +110,11 @@ class StepPage extends State<StepsPage> {
                                   averagePlotVisible = value!;
                                 });
                               },
-                              secondary: Icon(Icons.timeline, color: base)),
+                              secondary:
+                                  Icon(Icons.timeline, color: baseColor)),
                           CheckboxListTile(
-                              checkColor: base,
+                              checkColor: Colors.white,
+                              activeColor: baseColor,
                               title: const Text('Step goal line visibility'),
                               value: goalPlotVisible,
                               onChanged: (bool? value) {
@@ -116,7 +122,7 @@ class StepPage extends State<StepsPage> {
                                   goalPlotVisible = value!;
                                 });
                               },
-                              secondary: Icon(Icons.flag, color: base))
+                              secondary: Icon(Icons.flag, color: baseColor))
                         ],
                       );
                     }),
@@ -127,7 +133,7 @@ class StepPage extends State<StepsPage> {
                             {Navigator.pop(context, 'Back'), setState(() {})},
                         child: Text(
                           'Back',
-                          style: TextStyle(color: base),
+                          style: TextStyle(color: baseColor),
                         ),
                       ),
                     ],
@@ -147,14 +153,15 @@ class StepPage extends State<StepsPage> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
                           snapshot.data.toString().startsWith("Hurray")
                               ? Icons.verified_outlined
                               : Icons.rocket_launch,
                           color: snapshot.data.toString().startsWith("Hurray")
-                              ? Colors.green
-                              : Colors.red),
+                              ? Color.fromARGB(255, 12, 138, 17)
+                              : Color.fromARGB(255, 164, 21, 10)),
                       Flexible(
                           child: Text(
                         '${snapshot.data}',
@@ -162,15 +169,13 @@ class StepPage extends State<StepsPage> {
                         overflow: TextOverflow.fade,
                         style: TextStyle(
                             color: snapshot.data.toString().startsWith("Hurray")
-                                ? Colors.green
-                                : Colors.redAccent),
+                                ? Color.fromARGB(255, 12, 138, 17)
+                                : Color.fromARGB(255, 164, 21, 10)),
                       )),
                     ],
                   );
                 } else {
-                  return const CircularProgressIndicator(
-                    color: Colors.yellow,
-                  );
+                  return const CircularProgressIndicator();
                 }
               },
             ),
@@ -188,7 +193,7 @@ class StepPage extends State<StepsPage> {
                                 text: "Daily steps overview of the last 7 days",
                                 textStyle: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.white)),
+                                    color: textColor)),
                             primaryXAxis: CategoryAxis(labelRotation: 90),
                             primaryYAxis: NumericAxis(
                                 numberFormat: NumberFormat.compact(),
@@ -197,21 +202,21 @@ class StepPage extends State<StepsPage> {
                                 interval: 1000,
                                 title: AxisTitle(
                                     text: "Steps",
-                                    textStyle: TextStyle(color: Colors.white)),
+                                    textStyle: TextStyle(color: textColor)),
                                 plotBands: <PlotBand>[
                                   PlotBand(
                                     isVisible: goalPlotVisible,
                                     start: stepGoal,
                                     end: stepGoal,
                                     borderWidth: 2,
-                                    borderColor: Colors.blue,
-                                    text: "Your personal goal",
+                                    borderColor: baseColor,
+                                    text: "Personal goal",
                                     textAngle: 0,
                                     shouldRenderAboveSeries: true,
                                     horizontalTextAlignment: TextAnchor.end,
                                     verticalTextAlignment: TextAnchor.middle,
                                     textStyle: TextStyle(
-                                        color: Colors.blue, fontSize: 12),
+                                        color: baseColor, fontSize: 12),
                                   ),
                                   PlotBand(
                                     isVisible: averagePlotVisible,
@@ -219,7 +224,7 @@ class StepPage extends State<StepsPage> {
                                     end: averageSteps,
                                     shouldRenderAboveSeries: true,
                                     borderWidth: 2,
-                                    borderColor: Colors.green,
+                                    borderColor: Colors.grey,
                                     text: "Average",
                                     horizontalTextAlignment: TextAnchor.end,
                                     verticalTextAlignment: TextAnchor.middle,
@@ -236,7 +241,7 @@ class StepPage extends State<StepsPage> {
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15)),
                                   name: 'Test',
-                                  color: Color.fromARGB(255, 255, 210, 8))
+                                  color: blueElements)
                             ])
                       ]);
                 } else {
@@ -254,7 +259,7 @@ class StepPage extends State<StepsPage> {
                     children: [
                       Icon(
                         Icons.timeline,
-                        color: base,
+                        color: baseColor,
                       ),
                       FutureBuilder(
                         future: _AverageSteps(),
@@ -262,7 +267,7 @@ class StepPage extends State<StepsPage> {
                           if (snapshot.hasData) {
                             return Text(
                               'Average of last 7 days: ${snapshot.data}',
-                              style: TextStyle(color: text),
+                              style: TextStyle(color: textColor),
                               //textAlign: TextAlign.center,
                               overflow: TextOverflow.fade,
                             );
@@ -279,7 +284,7 @@ class StepPage extends State<StepsPage> {
               children: [
                 Icon(
                   Icons.directions_walk_rounded,
-                  color: base,
+                  color: baseColor,
                 ),
                 FutureBuilder(
                   future: _getTodaysSteps(),
@@ -287,7 +292,7 @@ class StepPage extends State<StepsPage> {
                     if (snapshot.hasData) {
                       return Text(
                         'Steps today: ${snapshot.data}',
-                        style: TextStyle(color: text),
+                        style: TextStyle(color: textColor),
                         //textAlign: TextAlign.center,
                         overflow: TextOverflow.fade,
                       );
@@ -303,17 +308,17 @@ class StepPage extends State<StepsPage> {
               children: [
                 Icon(
                   Icons.flag,
-                  color: base,
+                  color: baseColor,
                 ),
                 Text(
                   'Your current step goal is: $stepGoal',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: textColor),
                 ),
               ],
             ),
             FloatingActionButton.extended(
               hoverColor: Colors.white,
-              backgroundColor: Color.fromARGB(255, 44, 0, 30),
+              backgroundColor: baseColor,
               onPressed: () {
                 setState(() {
                   showDialog<String>(
@@ -337,14 +342,22 @@ class StepPage extends State<StepsPage> {
                       actions: <Widget>[
                         TextButton(
                           onPressed: () => {Navigator.pop(context, 'Cancel')},
-                          child: const Text('Cancel'),
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 99, 0, 68)),
+                          ),
                         ),
                         TextButton(
                           onPressed: () => setState(() {
                             Navigator.pop(context, 'Set new goal');
                             stepGoal = dummyNumber;
                           }),
-                          child: const Text('Set new goal'),
+                          child: const Text(
+                            'Set new goal',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 99, 0, 68)),
+                          ),
                         ),
                       ],
                     ),

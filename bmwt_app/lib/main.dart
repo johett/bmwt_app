@@ -39,10 +39,11 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    Color accent = Color.fromARGB(255, 2, 86, 152);
+    Color accent =
+        Color.fromARGB(255, 194, 221, 244); //Color.fromARGB(255, 2, 86, 152);
     Color base = Colors.white;
-    Color darkBase = Color.fromARGB(255, 44, 0, 30);
-    Color textColor = Color.fromARGB(255, 174, 167, 159);
+    Color darkBase = Color.fromARGB(255, 99, 0, 68);
+    Color textColor = Color.fromARGB(255, 61, 58, 55);
     return MaterialApp(
       theme: ThemeData(
           focusColor: accent,
