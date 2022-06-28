@@ -1,19 +1,20 @@
+import 'package:bmwt_app/repositories/databaseRepository.dart';
 import 'package:bmwt_app/screens/heartpage.dart';
+import 'package:bmwt_app/screens/userPage.dart';
 import 'package:bmwt_app/utility/credentials.dart';
 import 'package:fitbitter/fitbitter.dart';
 import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
 import 'package:bmwt_app/screens/loginpage.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bmwt_app/screens/calorieswspage.dart';
 import 'package:bmwt_app/screens/StepPage.dart';
 import 'package:bmwt_app/screens/function2page.dart';
-import 'package:bmwt_app/screens/HP2.dart';
-import 'package:bmwt_app/screens/HP3.dart';
-import 'package:bmwt_app/screens/DBTest.dart';
 import 'package:bmwt_app/assets/customIcons/my_flutter_app_icons.dart';
 import 'package:bmwt_app/screens/changeHeartGoals.dart';
 import '../database/database.dart';
+import 'package:bmwt_app/database/entities/userData.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,7 +24,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? name = 'giacomo';
     int _index = 2;
     print('${HomePage.routename} built');
     return Scaffold(
@@ -43,28 +43,61 @@ class HomePage extends StatelessWidget {
               end: FractionalOffset.topRight,
               stops: [0.2, 1]),
         ),
-        child: Container(
-          alignment: Alignment.topCenter,
-          padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
-          child: FutureBuilder(
-            future: getName(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                name = snapshot.data as String;
-                return Text('Welcome back ${name}',
-                    style: TextStyle(
-                      fontSize: 36,
-                      color: Colors.white,
-                    ));
-              } else {
-                return Text('Welcome back',
-                    style: TextStyle(
-                      fontSize: 36,
-                      color: Colors.white,
-                    ));
-              }
-            },
-          ),
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.topCenter,
+              padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
+              child: FutureBuilder(
+                future: getBattery(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    String batteryLevel = snapshot.data as String;
+                    print(batteryLevel);
+                    return Text('Battery level: ${batteryLevel}',
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: batteryLevel == 'Low'
+                                ? Colors.red
+                                : Colors.white));
+                  } else
+                    return Text('');
+                },
+              ),
+            ),
+            Container(
+                alignment: Alignment.topCenter,
+                padding: EdgeInsets.fromLTRB(0, 30, 0, 20),
+                child: Consumer<DatabaseRepository>(
+                    builder: (context, dbr, child) {
+                  return FutureBuilder(
+                      future: dbr.getUserData(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          List<UserData> user = snapshot.data as List<UserData>;
+                          if (user.length != 0) {
+                            return Text('Welcome back ${user[0].name}',
+                                style: TextStyle(
+                                  fontSize: 36,
+                                  color: Colors.white,
+                                ));
+                          } else {
+                            return Text('Welcome back',
+                                style: TextStyle(
+                                  fontSize: 36,
+                                  color: Colors.white,
+                                ));
+                          }
+                        } else {
+                          return Text('Welcome back',
+                              style: TextStyle(
+                                fontSize: 36,
+                                color: Colors.white,
+                              ));
+                        }
+                      });
+                })),
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -88,8 +121,8 @@ class HomePage extends StatelessWidget {
               label: 'Settings',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.stop),
-              label: 'DB Test',
+              icon: Icon(Icons.person),
+              label: 'User',
             )
           ],
           onTap: (index) {
@@ -97,7 +130,7 @@ class HomePage extends StatelessWidget {
               Navigator.pushNamed(context, CaloriesWSPage.route);
             }
             if (index == 1) {
-              Navigator.pushNamed(context, HP3.route);
+              Navigator.pushNamed(context, HeartPage.route);
             }
             if (index == 2) {
               Navigator.pushNamed(context, StepPage.route);
@@ -106,7 +139,7 @@ class HomePage extends StatelessWidget {
               Navigator.pushNamed(context, ChangeHeartGoals.route);
             }
             if (index == 4) {
-              Navigator.pushNamed(context, DBTest.route);
+              Navigator.pushNamed(context, UserPage.route);
             }
           }),
       drawer: Drawer(
@@ -184,5 +217,19 @@ class HomePage extends StatelessWidget {
     String? name = sp.getString('username');
     print(sp.toString());
     return name;
+  }
+
+  Future<String?> getBattery() async {
+    final sp = await SharedPreferences.getInstance();
+    String? name = sp.getString('username');
+    FitbitDeviceDataManager manager = FitbitDeviceDataManager(
+      clientID: FitbitAppCredentials.clientID,
+      clientSecret: FitbitAppCredentials.clientSecret,
+    );
+    FitbitDeviceAPIURL fitbitDeviceAPIURL =
+        FitbitDeviceAPIURL.withUserID(userID: name);
+    List<FitbitData> data = await manager.fetch(fitbitDeviceAPIURL);
+    FitbitDeviceData device = data[0] as FitbitDeviceData;
+    return device.batteryLevel;
   }
 } //Page

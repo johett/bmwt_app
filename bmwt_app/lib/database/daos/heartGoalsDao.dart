@@ -15,10 +15,7 @@ abstract class HeartGoalsDao {
   @Insert(onConflict: OnConflictStrategy.replace)
   Future<void> insertHeartGoals(HeartGoals heartGoals);
 
-  @Update(onConflict: OnConflictStrategy.replace)
-  Future<void> updateHeartGoals(HeartGoals heartGoals);
-
-  //Query #3: DELETE -> this allows to delete a CaloriesDay from the table
+  //Query #3: DELETE -> this allows to delete
   @delete
   Future<void> deleteHeartGoals(HeartGoals heartGoals);
-}//MealDao
+} //MealDao

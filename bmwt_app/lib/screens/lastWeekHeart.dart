@@ -29,9 +29,9 @@ class _LastWeekHeart extends State<LastWeekHeart> {
     print('${LastWeekHeart.routename} built');
     return Scaffold(
         appBar: AppBar(
-          title: Text(LastWeekHeart.routename,
-              style: TextStyle(color: Color.fromARGB(255, 233, 86, 32))),
-          backgroundColor: Color.fromARGB(255, 44, 0, 30),
+          title: Text(
+            LastWeekHeart.routename,
+          ),
         ),
         body: CardManager());
     ;
@@ -64,7 +64,6 @@ class _CardManager extends State<CardManager> {
                   if (snapshot.hasData) {
                     data = snapshot.data as List<FitbitHeartData>;
                     return new Scaffold(
-                      backgroundColor: Color.fromARGB(255, 44, 0, 30),
                       body: SingleChildScrollView(
                         child: Column(children: [
                           for (int i = 1; i < data!.length; i++)
@@ -117,7 +116,6 @@ class _HeartCard extends State<HeartCard> {
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
       child: Card(
         elevation: 2,
-        color: Color.fromARGB(255, 94, 39, 80),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -127,7 +125,8 @@ class _HeartCard extends State<HeartCard> {
                   Text(
                     'Date:  ${widget.data!.dateOfMonitoring.toString().substring(0, 10)} ',
                     style: TextStyle(
-                        fontSize: 20, color: Color.fromARGB(255, 233, 86, 32)),
+                        fontSize: 20,
+                        color: Theme.of(context).primaryColorDark),
                   ),
                 ],
                 mainAxisAlignment: MainAxisAlignment.center,

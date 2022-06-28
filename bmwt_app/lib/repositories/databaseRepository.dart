@@ -3,6 +3,7 @@ import 'package:bmwt_app/database/entities/caloriesDay.dart';
 import 'package:bmwt_app/database/entities/caloriesWS.dart';
 import 'package:bmwt_app/database/entities/heart.dart';
 import 'package:bmwt_app/database/entities/heartGoals.dart';
+import 'package:bmwt_app/database/entities/userData.dart';
 import 'package:flutter/material.dart';
 
 class DatabaseRepository extends ChangeNotifier {
@@ -85,11 +86,6 @@ class DatabaseRepository extends ChangeNotifier {
     //notifyListeners();
   }
 
-  Future<void> updateHeartGoals(HeartGoals heartGoals) async {
-    await database.heartGoalsDao.updateHeartGoals(heartGoals);
-    notifyListeners();
-  }
-
   Future<void> deleteHeartGoals(HeartGoals heartGoals) async {
     await database.heartGoalsDao.deleteHeartGoals(heartGoals);
   }
@@ -98,4 +94,20 @@ class DatabaseRepository extends ChangeNotifier {
     await database.heartGoalsDao.insertHeartGoals(heartGoals);
     notifyListeners();
   }
-} //DatabaseRepository
+
+//*********************UserData */
+  Future<List<UserData>> getUserData() async {
+    final user = await database.userDao.getUser();
+    return user;
+    //notifyListeners();
+  }
+
+  Future<void> deleteUser(UserData user) async {
+    await database.userDao.deleteUser(user);
+  }
+
+  Future<void> insertUser(UserData user) async {
+    await database.userDao.insertUser(user);
+    notifyListeners();
+  } //DatabaseRepository
+}

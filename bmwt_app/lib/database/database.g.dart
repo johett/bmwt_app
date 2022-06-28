@@ -67,6 +67,8 @@ class _$AppDatabase extends AppDatabase {
 
   HeartDao? _heartDaoInstance;
 
+  UserDao? _userDaoInstance;
+
   HeartGoalsDao? _heartGoalsDaoInstance;
 
   Future<sqflite.Database> open(String path, List<Migration> migrations,
@@ -88,13 +90,15 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `HeartGoals` (`id` INTEGER NOT NULL, `goalCalories` INTEGER NOT NULL, `minutesCardio` INTEGER NOT NULL, `minutesPeak` INTEGER NOT NULL, `minutesBurningFat` INTEGER NOT NULL, PRIMARY KEY (`id`))');
-        await database.execute(
             'CREATE TABLE IF NOT EXISTS `CaloriesWS` (`id` INTEGER NOT NULL, `startDay` INTEGER NOT NULL, `lastDay` INTEGER NOT NULL, `activityCalories` REAL, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `CaloriesDay` (`idWeek` INTEGER NOT NULL, `idDayOfTheWeek` INTEGER NOT NULL, `startDay` INTEGER NOT NULL, `lastDay` INTEGER NOT NULL, `day` INTEGER NOT NULL, `activityCalories` REAL, PRIMARY KEY (`idWeek`, `idDayOfTheWeek`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Heart` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `heartBeat` INTEGER, `dateTime` TEXT NOT NULL, `minutesCardio` INTEGER)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `UserData` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT, `surname` TEXT, `height` INTEGER, `weight` REAL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `HeartGoals` (`id` INTEGER NOT NULL DEFAULT 0, `goalCalories` INTEGER NOT NULL DEFAULT 500, `minutesCardio` INTEGER NOT NULL DEFAULT 10, `minutesPeak` INTEGER NOT NULL DEFAULT 10, `minutesBurningFat` INTEGER NOT NULL DEFAULT 10, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -116,6 +120,11 @@ class _$AppDatabase extends AppDatabase {
   @override
   HeartDao get heartDao {
     return _heartDaoInstance ??= _$HeartDao(database, changeListener);
+  }
+
+  @override
+  UserDao get userDao {
+    return _userDaoInstance ??= _$UserDao(database, changeListener);
   }
 
   @override
@@ -319,23 +328,69 @@ class _$HeartDao extends HeartDao {
   }
 }
 
+class _$UserDao extends UserDao {
+  _$UserDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _userDataInsertionAdapter = InsertionAdapter(
+            database,
+            'UserData',
+            (UserData item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'surname': item.surname,
+                  'height': item.height,
+                  'weight': item.weight
+                }),
+        _userDataDeletionAdapter = DeletionAdapter(
+            database,
+            'UserData',
+            ['id'],
+            (UserData item) => <String, Object?>{
+                  'id': item.id,
+                  'name': item.name,
+                  'surname': item.surname,
+                  'height': item.height,
+                  'weight': item.weight
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<UserData> _userDataInsertionAdapter;
+
+  final DeletionAdapter<UserData> _userDataDeletionAdapter;
+
+  @override
+  Future<List<UserData>> getUser() async {
+    return _queryAdapter.queryList('SELECT * FROM UserData',
+        mapper: (Map<String, Object?> row) => UserData(
+            row['id'] as int?,
+            row['name'] as String?,
+            row['surname'] as String?,
+            row['height'] as int?,
+            row['weight'] as double?));
+  }
+
+  @override
+  Future<void> insertUser(UserData user) async {
+    await _userDataInsertionAdapter.insert(user, OnConflictStrategy.replace);
+  }
+
+  @override
+  Future<void> deleteUser(UserData user) async {
+    await _userDataDeletionAdapter.delete(user);
+  }
+}
+
 class _$HeartGoalsDao extends HeartGoalsDao {
   _$HeartGoalsDao(this.database, this.changeListener)
       : _queryAdapter = QueryAdapter(database),
         _heartGoalsInsertionAdapter = InsertionAdapter(
             database,
             'HeartGoals',
-            (HeartGoals item) => <String, Object?>{
-                  'id': item.id,
-                  'goalCalories': item.goalCalories,
-                  'minutesCardio': item.minutesCardio,
-                  'minutesPeak': item.minutesPeak,
-                  'minutesBurningFat': item.minutesBurningFat
-                }),
-        _heartGoalsUpdateAdapter = UpdateAdapter(
-            database,
-            'HeartGoals',
-            ['id'],
             (HeartGoals item) => <String, Object?>{
                   'id': item.id,
                   'goalCalories': item.goalCalories,
@@ -362,8 +417,6 @@ class _$HeartGoalsDao extends HeartGoalsDao {
   final QueryAdapter _queryAdapter;
 
   final InsertionAdapter<HeartGoals> _heartGoalsInsertionAdapter;
-
-  final UpdateAdapter<HeartGoals> _heartGoalsUpdateAdapter;
 
   final DeletionAdapter<HeartGoals> _heartGoalsDeletionAdapter;
 
@@ -393,12 +446,6 @@ class _$HeartGoalsDao extends HeartGoalsDao {
   @override
   Future<void> insertHeartGoals(HeartGoals heartGoals) async {
     await _heartGoalsInsertionAdapter.insert(
-        heartGoals, OnConflictStrategy.replace);
-  }
-
-  @override
-  Future<void> updateHeartGoals(HeartGoals heartGoals) async {
-    await _heartGoalsUpdateAdapter.update(
         heartGoals, OnConflictStrategy.replace);
   }
 

@@ -1,5 +1,4 @@
 import 'package:bmwt_app/screens/changeHeartGoals.dart';
-import 'package:bmwt_app/screens/dbTest.dart';
 import 'package:bmwt_app/screens/homepage.dart';
 import 'package:bmwt_app/screens/loginpage.dart';
 import 'package:bmwt_app/screens/calorieshomepage.dart';
@@ -8,9 +7,9 @@ import 'package:bmwt_app/screens/caloriesDaypage.dart';
 import 'package:bmwt_app/screens/heartpage.dart';
 import 'package:bmwt_app/screens/StepPage.dart';
 import 'package:bmwt_app/screens/function2page.dart';
-import 'package:bmwt_app/screens/HP2.dart';
 import 'package:bmwt_app/screens/HP3.dart';
 import 'package:bmwt_app/screens/lastWeekHeart.dart';
+import 'package:bmwt_app/screens/userPage.dart';
 import 'package:flutter/material.dart';
 import 'package:bmwt_app/database/database.dart';
 import 'package:bmwt_app/repositories/databaseRepository.dart';
@@ -46,26 +45,27 @@ class MyApp extends StatelessWidget {
     Color textColor = Color.fromARGB(255, 61, 58, 55);
     return MaterialApp(
       theme: ThemeData(
-          focusColor: accent,
-          primaryColor: base,
-          primaryColorDark: darkBase,
-          scaffoldBackgroundColor: base,
-          bottomAppBarColor: darkBase,
-          backgroundColor: base,
-          appBarTheme: AppBarTheme(
-              color: darkBase,
-              titleTextStyle: TextStyle(color: accent, fontSize: 26)),
-          iconTheme: IconThemeData(color: accent),
-          textTheme: TextTheme(
-              //Changes text data
-              bodyText2: TextStyle(fontSize: 16, color: textColor)),
-          progressIndicatorTheme: ProgressIndicatorThemeData(color: accent),
-          bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            backgroundColor: darkBase,
-            selectedItemColor: accent,
-            unselectedItemColor: accent,
-            type: BottomNavigationBarType.fixed,
-          )),
+        focusColor: accent,
+        primaryColor: base,
+        primaryColorDark: darkBase,
+        scaffoldBackgroundColor: base,
+        bottomAppBarColor: darkBase,
+        backgroundColor: base,
+        appBarTheme: AppBarTheme(
+            color: darkBase,
+            titleTextStyle: TextStyle(color: accent, fontSize: 26)),
+        iconTheme: IconThemeData(color: accent),
+        textTheme: TextTheme(
+            //Changes text data
+            bodyText2: TextStyle(fontSize: 16, color: textColor)),
+        progressIndicatorTheme: ProgressIndicatorThemeData(color: accent),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: darkBase,
+          selectedItemColor: accent,
+          unselectedItemColor: accent,
+          type: BottomNavigationBarType.fixed,
+        ),
+      ),
 
       //Approach 2:
       //This specifies the app entrypoint
@@ -76,14 +76,13 @@ class MyApp extends StatelessWidget {
         HomePage.route: (context) => const HomePage(),
         CaloriesHomePage.route: (context) => const CaloriesHomePage(),
         HeartPage.route: (context) => HeartPage(),
-        HP2.route: (context) => HP2(),
         HP3.route: (context) => HP3(),
         ChangeHeartGoals.route: (context) => ChangeHeartGoals(),
-        DBTest.route: (context) => DBTest(),
         LastWeekHeart.route: (context) => LastWeekHeart(),
         CaloriesWSPage.route: (context) => const CaloriesWSPage(),
         CaloriesDayPage.route: (context) => const CaloriesDayPage(),
         StepPage.route: (context) => StepsPage(),
+        UserPage.route: (context) => UserPage(),
         Function2Page.route: (context) => const Function2Page(),
       },
     );

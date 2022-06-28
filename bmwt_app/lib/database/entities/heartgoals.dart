@@ -15,4 +15,4 @@ class HeartGoals {
   //Default constructor
   HeartGoals(this.id, this.goalCalories, this.minutesCardio, this.minutesPeak,
       this.minutesBurningFat);
-}//CaloriesWS
+}
