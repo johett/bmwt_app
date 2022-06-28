@@ -1,4 +1,5 @@
 import 'package:bmwt_app/repositories/databaseRepository.dart';
+import 'package:bmwt_app/screens/calorieshomepage.dart';
 import 'package:bmwt_app/screens/heartpage.dart';
 import 'package:bmwt_app/screens/userPage.dart';
 import 'package:bmwt_app/utility/credentials.dart';
@@ -127,7 +128,7 @@ class HomePage extends StatelessWidget {
           ],
           onTap: (index) {
             if (index == 0) {
-              Navigator.pushNamed(context, CaloriesWSPage.route);
+              Navigator.pushNamed(context, CaloriesHomePage.route);
             }
             if (index == 1) {
               Navigator.pushNamed(context, HeartPage.route);
@@ -148,9 +149,9 @@ class HomePage extends StatelessWidget {
           children: [
             const DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Color.fromARGB(255, 99, 0, 68),
                 ),
-                child: Text('bmwt_app')),
+                child: Text('')),
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),

@@ -20,7 +20,7 @@ class CaloriesDayPage extends StatelessWidget {
     final measBMR = i.caloriesBMR;
     
     return Scaffold(
-      backgroundColor: Colors.blue,
+      //backgroundColor: Colors.blue,
       appBar: AppBar(
         title: const Text(CaloriesDayPage.routename),
       ),
@@ -32,15 +32,15 @@ class CaloriesDayPage extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final data = snapshot.data as List<CaloriesDay>;
-                return ListView.separated(
-                     separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.blue, thickness: 10,),
+                return ListView.separated(   // just shows as a listview all the single days of the chosen week
+                     separatorBuilder: (BuildContext context, int index) => Divider(color: Color.fromARGB(255, 99, 0, 68), thickness: 10,),
                     itemCount: data.length,
                     itemBuilder: (context, index) {
                       final caloriesDay = data[index];
                       return ListTile(
-                            tileColor: Color(0xFFFFE082),
+                            //tileColor: Color(0xFFFFE082),
                             style: ListTileStyle.list,
-                            leading: Text('${index+1}', style: TextStyle(color: Colors.blue, fontSize: 20) ),
+                            leading: Text('${index+1}', style: TextStyle(color: Color.fromARGB(255, 99, 0, 68), fontSize: 20) ),
                             title: Text('Day: ${caloriesDay.day.day}/${caloriesDay.day.month}/${caloriesDay.day.year}'),
                             subtitle: (caloriesDay.activityCalories==null)?
                                 const Text('No data avaiables'):

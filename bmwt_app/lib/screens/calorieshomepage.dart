@@ -26,7 +26,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
   Widget build(BuildContext context) {
     print('${CaloriesHomePage.routename} built');
     return Scaffold(
-      backgroundColor: Color(0xFF2196F3),
+      //backgroundColor: Color(0xFF2196F3),
       appBar: AppBar(
         title: const Text(CaloriesHomePage.routename),
       ),
@@ -36,15 +36,15 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
           width: 300,
           child: Center(
             child: Container(
-              color: Color(0xFFFFE082),
+              //color: Color(0xFFFFE082),
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.orange, width: 5)),
+                  border: Border.all(color: Color.fromARGB(255, 99, 0, 68), width: 5)),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                       FutureBuilder(
-                      future: _bmrFitbit(),
+                      future: _bmrFitbit(),  //method that will retrive the BMR value from FitBit
                       builder: (context, snapshot) {
                         if(snapshot.hasData)
                         {
@@ -59,7 +59,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FutureBuilder(
-                          future: _measuredBMR(),
+                          future: _measuredBMR(),  //BMR insert by the user, for example if he/she knows it from a more specific visits
                           builder:(context,snapshot){
                             if(snapshot.hasData){
                               return Text('BMR: ${snapshot.data}', style: TextStyle(fontSize: 20),);
@@ -70,7 +70,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                           ),
                       ],
                     ),
-                    Row(
+                    Row( //buttons to vary the bmr
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
@@ -80,6 +80,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                             sp.setDouble('measuredBMR', measuredBMR);
                             setState(() {});
                           },
+                          style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)),
                           child: Text('-10'),
                           ),
                         SizedBox(width: 10,),
@@ -90,6 +91,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                             sp.setDouble('measuredBMR', measuredBMR);
                             setState(() {});
                           },
+                          style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)),
                           child: Text('-1'),
                           ),
                         SizedBox(width: 10,),
@@ -100,6 +102,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                             sp.setDouble('measuredBMR', measuredBMR);
                             setState(() {});
                           },
+                          style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)),
                           child: Text('+1'),
                           ),
                         SizedBox(width: 10,),
@@ -110,6 +113,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                             sp.setDouble('measuredBMR', measuredBMR);
                             setState(() {});
                           },
+                          style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)),
                           child: Text('+10'),
                           ),
                       ],
@@ -118,7 +122,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                          FutureBuilder(
-                           future: _thresholdCalories(),
+                           future: _thresholdCalories(), //calories of the diet the user is following
                            builder: (context, snapshot){
                              if(snapshot.hasData){
                                return Text('Diet kcal per day: ${snapshot.data}',style: TextStyle(fontSize: 20));
@@ -129,7 +133,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                            ),
                       ],
                     ),
-                    Row(
+                    Row( //buttons to vary the calories of the diet
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
@@ -139,6 +143,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                             sp.setDouble('thresholdCalories', thresholdCalories);
                             setState(() {});
                           },
+                          style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)),
                           child: Text('-10'),
                           ),
                         SizedBox(width: 10,),
@@ -149,6 +154,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                             sp.setDouble('thresholdCalories', thresholdCalories);
                             setState(() {});
                           },
+                          style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)),
                           child: Text('-1'),
                           ),
                         SizedBox(width: 10,),
@@ -159,6 +165,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                             sp.setDouble('thresholdCalories', thresholdCalories);
                             setState(() {});
                           },
+                          style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)),
                           child: Text('+1'),
                           ),
                         SizedBox(width: 10,),
@@ -169,6 +176,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                             sp.setDouble('thresholdCalories', thresholdCalories);
                             setState(() {});
                           },
+                          style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)),
                           child: Text('+10'),
                           ),
                       ],
@@ -178,14 +186,14 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          onPressed: () async{
+                          onPressed: () async{  //navigate to the following page, sending some values to it (BMR and diet calories)
                             final sp = await SharedPreferences.getInstance();
                             double thresholdCalories=sp.getDouble('thresholdCalories')!;
                             double? measuredBMR=sp.getDouble('measuredBMR')!+10.0;
                             Navigator.pushNamed(context, CaloriesWSPage.route, arguments: SendData2(thresholdCalories, measuredBMR));
                           },
                           child: Text('Go to Weeks Summary page', style: TextStyle(fontSize: 20),),
-                          style: ElevatedButton.styleFrom(primary: Colors.green),
+                          style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)),
                         )
                       ],
                     )
@@ -200,7 +208,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
     );
   }
 
-  Future<String> _measuredBMR() async {
+  Future<String> _measuredBMR() async {  //retrive the value of the measured BMR from shared preferences
     final sp = await SharedPreferences.getInstance();
     double? measuredBMR = sp.getDouble('measuredBMR');
     if (measuredBMR == null) {
@@ -210,7 +218,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
     return measuredBMR.toString();
   }
 
-  Future<String> _thresholdCalories() async {
+  Future<String> _thresholdCalories() async {  //retrive the diet calories from shared preferences
     final sp = await SharedPreferences.getInstance();
     double? thresholdCalories = sp.getDouble('thresholdCalories');
     if (thresholdCalories == null) {
@@ -220,7 +228,7 @@ class _CaloriesHomePageState extends State<CaloriesHomePage> {
     return thresholdCalories.toString();
   }
 
-  Future<String> _bmrFitbit() async {
+  Future<String> _bmrFitbit() async {  //retrive the BMR computed by fitbit
     FitbitActivityTimeseriesDataManager fitbitActivityTimeseriesDataManager =
         FitbitActivityTimeseriesDataManager(
       clientID: FitbitAppCredentials.clientID,
