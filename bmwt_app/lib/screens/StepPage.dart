@@ -156,10 +156,10 @@ class StepPage extends State<StepsPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                          snapshot.data.toString().startsWith("Hurray")
+                          snapshot.data.toString().startsWith(" Hurray")
                               ? Icons.verified_outlined
                               : Icons.rocket_launch,
-                          color: snapshot.data.toString().startsWith("Hurray")
+                          color: snapshot.data.toString().startsWith(" Hurray")
                               ? Color.fromARGB(255, 12, 138, 17)
                               : Color.fromARGB(255, 164, 21, 10)),
                       Flexible(
@@ -168,9 +168,10 @@ class StepPage extends State<StepsPage> {
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.fade,
                         style: TextStyle(
-                            color: snapshot.data.toString().startsWith("Hurray")
-                                ? Color.fromARGB(255, 12, 138, 17)
-                                : Color.fromARGB(255, 164, 21, 10)),
+                            color:
+                                snapshot.data.toString().startsWith(" Hurray")
+                                    ? Color.fromARGB(255, 12, 138, 17)
+                                    : Color.fromARGB(255, 164, 21, 10)),
                       )),
                     ],
                   );
@@ -245,9 +246,7 @@ class StepPage extends State<StepsPage> {
                             ])
                       ]);
                 } else {
-                  return const CircularProgressIndicator(
-                    color: Colors.red,
-                  );
+                  return const CircularProgressIndicator();
                 }
               },
             ),
@@ -259,7 +258,7 @@ class StepPage extends State<StepsPage> {
                     children: [
                       Icon(
                         Icons.timeline,
-                        color: baseColor,
+                        color: blueElements,
                       ),
                       FutureBuilder(
                         future: _AverageSteps(),
@@ -284,7 +283,7 @@ class StepPage extends State<StepsPage> {
               children: [
                 Icon(
                   Icons.directions_walk_rounded,
-                  color: baseColor,
+                  color: blueElements,
                 ),
                 FutureBuilder(
                   future: _getTodaysSteps(),
@@ -308,7 +307,7 @@ class StepPage extends State<StepsPage> {
               children: [
                 Icon(
                   Icons.flag,
-                  color: baseColor,
+                  color: blueElements,
                 ),
                 Text(
                   'Your current step goal is: $stepGoal',
@@ -336,8 +335,7 @@ class StepPage extends State<StepsPage> {
                           FilteringTextInputFormatter.digitsOnly
                         ],
                         keyboardType: TextInputType.number,
-                        decoration:
-                            InputDecoration(hintText: "Text Field in Dialog"),
+                        decoration: InputDecoration(hintText: "New step goal"),
                       ),
                       actions: <Widget>[
                         TextButton(
@@ -445,7 +443,7 @@ class StepPage extends State<StepsPage> {
     if (today! < stepGoal) {
       return "You have still some steps to walk to reach your personal step goal. Let's go!";
     } else {
-      return "Hurray, your reached your personal step goal!";
+      return " Hurray, your reached your personal step goal!";
     }
   }
 }
