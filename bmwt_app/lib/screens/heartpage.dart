@@ -89,8 +89,11 @@ class Page extends StatelessWidget {
             initialData: null,
             future: dbr.getHeartGoals(),
             builder: ((context, snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.hasData && snapshot.data != null) {
                 var goals = snapshot.data as List<HeartGoals>;
+                if (goals.length == 0) {
+                  goals.add(HeartGoals(0, 500, 10, 10, 10));
+                }
                 return Column(
                   children: [
                     HeartRateWidget(h.restingHeartRate.toString()),

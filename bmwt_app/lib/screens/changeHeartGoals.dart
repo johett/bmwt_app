@@ -49,10 +49,18 @@ class _ChangeHeartGoalsState extends State<ChangeHeartGoals> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final data = snapshot.data as List<HeartGoals>;
-                  calories = data[0].goalCalories;
-                  cardio = data[0].minutesCardio;
-                  peak = data[0].minutesPeak;
-                  bFat = data[0].minutesPeak;
+                  if (data.length == 0) {
+                    calories = 500;
+                    cardio = 10;
+                    peak = 10;
+                    bFat = 10;
+                  } else {
+                    calories = data[0].goalCalories;
+                    cardio = data[0].minutesCardio;
+                    peak = data[0].minutesPeak;
+                    bFat = data[0].minutesPeak;
+                  }
+
                   return Scaffold(
                     body: SingleChildScrollView(
                       child: Column(
