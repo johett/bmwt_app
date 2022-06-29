@@ -16,11 +16,12 @@ class CaloriesWSPage extends StatelessWidget {
   const CaloriesWSPage({Key? key}) : super(key: key);
 
   static const route = '/caloriesWS';
-  static const routename = 'CaloriesWSPage';
-  
+  static const routename = 'Weekly calories summary';
+
   @override
   Widget build(BuildContext context) {
-    final i = ModalRoute.of(context)!.settings.arguments! as SendData2; //catches data sent by CaloriesHomePage
+    final i = ModalRoute.of(context)!.settings.arguments!
+        as SendData2; //catches data sent by CaloriesHomePage
     final double dietCalories = i.thresholdCalories;
     final double measBMR = i.caloriesBMR;
 
@@ -31,131 +32,158 @@ class CaloriesWSPage extends StatelessWidget {
         title: const Text(CaloriesWSPage.routename),
       ),
 
-      floatingActionButton: FloatingActionButton( //pressing the FAB it will load a new week of data
-        backgroundColor: Color.fromARGB(255, 99, 0, 68),
-        foregroundColor: Colors.white,
-        onPressed: () async {
-          final list = await Provider.of<DatabaseRepository>(context, listen: false).findAllCaloriesWS();
-          int weeksInDB = list.length;
-          FitbitActivityTimeseriesDataManager fitbitActivityTimeseriesDataManager = FitbitActivityTimeseriesDataManager(
-            clientID: FitbitAppCredentials.clientID,
-            clientSecret: FitbitAppCredentials.clientSecret,
-            type: 'calories'
-          );
-          final sp = await SharedPreferences.getInstance();
-          FitbitActivityTimeseriesAPIURL fitbitActivityTimeseriesApiUrl = FitbitActivityTimeseriesAPIURL.weekWithResource(
-            baseDate: DateTime.now().subtract(Duration(days: 7*weeksInDB+1)),
-            userID: sp.getString('username'),
-            resource: 'calories',
-          );
-          final weekToBeProcessed = await fitbitActivityTimeseriesDataManager.fetch(fitbitActivityTimeseriesApiUrl) as List<FitbitActivityTimeseriesData>;
-          final fitbitBMR = sp.getDouble('fitbitBMR');
-          int dayOfTheWeek=0;
-          double? activityAverage=0;
-          int notnull=0;
+      floatingActionButton: FloatingActionButton(
+          //pressing the FAB it will load a new week of data
+          backgroundColor: Color.fromARGB(255, 99, 0, 68),
+          foregroundColor: Colors.white,
+          onPressed: () async {
+            final list =
+                await Provider.of<DatabaseRepository>(context, listen: false)
+                    .findAllCaloriesWS();
+            int weeksInDB = list.length;
+            FitbitActivityTimeseriesDataManager
+                fitbitActivityTimeseriesDataManager =
+                FitbitActivityTimeseriesDataManager(
+                    clientID: FitbitAppCredentials.clientID,
+                    clientSecret: FitbitAppCredentials.clientSecret,
+                    type: 'calories');
+            final sp = await SharedPreferences.getInstance();
+            FitbitActivityTimeseriesAPIURL fitbitActivityTimeseriesApiUrl =
+                FitbitActivityTimeseriesAPIURL.weekWithResource(
+              baseDate:
+                  DateTime.now().subtract(Duration(days: 7 * weeksInDB + 1)),
+              userID: sp.getString('username'),
+              resource: 'calories',
+            );
+            final weekToBeProcessed = await fitbitActivityTimeseriesDataManager
+                    .fetch(fitbitActivityTimeseriesApiUrl)
+                as List<FitbitActivityTimeseriesData>;
+            final fitbitBMR = sp.getDouble('fitbitBMR');
+            int dayOfTheWeek = 0;
+            double? activityAverage = 0;
+            int notnull = 0;
 
-          for(var item in weekToBeProcessed) //correct the values of Fitbit according with the modification proposed
-          {
-            double? correctedActivityCalories = _correctCalories(item.value, fitbitBMR!);
-            await Provider.of<DatabaseRepository>(context, listen: false).insertCaloriesDay(
-              CaloriesDay(
+            for (var item
+                in weekToBeProcessed) //correct the values of Fitbit according with the modification proposed
+            {
+              double? correctedActivityCalories =
+                  _correctCalories(item.value, fitbitBMR!);
+              await Provider.of<DatabaseRepository>(context, listen: false)
+                  .insertCaloriesDay(CaloriesDay(
                 weeksInDB,
                 dayOfTheWeek,
-                DateTime.now().subtract(Duration(days: 7*weeksInDB+1+6)),
-                DateTime.now().subtract(Duration(days: 7*weeksInDB+1)),
-                DateTime.now().subtract(Duration(days: 7*weeksInDB+1+(6-dayOfTheWeek))),
+                DateTime.now().subtract(Duration(days: 7 * weeksInDB + 1 + 6)),
+                DateTime.now().subtract(Duration(days: 7 * weeksInDB + 1)),
+                DateTime.now().subtract(
+                    Duration(days: 7 * weeksInDB + 1 + (6 - dayOfTheWeek))),
                 correctedActivityCalories,
-              )
-            );
-            if(correctedActivityCalories!=null){
-              activityAverage=activityAverage!+correctedActivityCalories;
-              notnull++;
+              ));
+              if (correctedActivityCalories != null) {
+                activityAverage = activityAverage! + correctedActivityCalories;
+                notnull++;
+              }
+              dayOfTheWeek++;
             }
-            dayOfTheWeek++;
-          }
 
-          if(notnull!=0){
-            activityAverage=activityAverage!/notnull;
-          }
-          else {
-            activityAverage=0;
-          }
-          //storage in the database
-          await Provider.of<DatabaseRepository>(context, listen: false).insertCaloriesWS(
-            CaloriesWS(
+            if (notnull != 0) {
+              activityAverage = activityAverage! / notnull;
+            } else {
+              activityAverage = 0;
+            }
+            //storage in the database
+            await Provider.of<DatabaseRepository>(context, listen: false)
+                .insertCaloriesWS(CaloriesWS(
               weeksInDB,
-              DateTime.now().subtract(Duration(days: 7*weeksInDB+1+6)), 
-              DateTime.now().subtract(Duration(days: 7*weeksInDB+1)), 
+              DateTime.now().subtract(Duration(days: 7 * weeksInDB + 1 + 6)),
+              DateTime.now().subtract(Duration(days: 7 * weeksInDB + 1)),
               activityAverage,
-            )
-          );
+            ));
           },
           child: const Icon(Icons.add)),
-      
+
       body: Center(
-        child: 
-        Consumer<DatabaseRepository>(builder: (context, dbr, child) {
+        child: Consumer<DatabaseRepository>(builder: (context, dbr, child) {
           return FutureBuilder(
             future: dbr.findAllCaloriesWS(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 final data = snapshot.data as List<CaloriesWS>;
-                return ListView.separated( //print a list view with all the data in the database
-                    separatorBuilder: (BuildContext context, int index) => Divider(color: Color.fromARGB(255, 99, 0, 68), thickness: 10,),
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
-                      final caloriesWS = data[index];
-                      return ListTile(
-                            //tileColor: Color(0xFFFFE082),
-                            style: ListTileStyle.list,
-                            leading: Text('${index+1}', style: TextStyle(color: Color.fromARGB(255, 99, 0, 68), fontSize: 20) ),
-                            title: Text('From: ${caloriesWS.startDay.day}/${caloriesWS.startDay.month}/${caloriesWS.startDay.year} To: ${caloriesWS.lastDay.day}/${caloriesWS.startDay.month}/${caloriesWS.startDay.year}'),
-                            subtitle: (caloriesWS.activityCalories==null)?
-                                const Text('No data avaiables'):
-                                ((caloriesWS.activityCalories!+measBMR)>dietCalories)?
-                                  Text('Deficit of ${(caloriesWS.activityCalories!+measBMR-dietCalories).toInt()} kcal per day',style: TextStyle(color: Colors.red)):
-                                  Text('Surplus of ${(dietCalories-caloriesWS.activityCalories!-measBMR).toInt()} kcal per day',style: TextStyle(color: Colors.green)),
-                            trailing: (index==data.length-1)?
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)),
-                                onPressed: () async{
-                                  final caloriesDayToDelete = await Provider.of<DatabaseRepository>(context, listen: false).findAllCaloriesDayOfAWeek(caloriesWS.id);
-                                  for(var calDay in caloriesDayToDelete){
-                                    await Provider.of<DatabaseRepository>(context, listen: false).deleteCaloriesDay(calDay);
-                                  }
-                                  await Provider.of<DatabaseRepository>(context, listen: false).removeCaloriesWS(caloriesWS);
-                                },
-                                child: const Icon(MdiIcons.delete)
-                              ):
-                              Container(width:0, height:0),
-                            onTap: (){  //navigates to caloriesdaypage send the number of the week we want to see more in detail
-                              Navigator.pushNamed(context, CaloriesDayPage.route, arguments: SendData(index,dietCalories,measBMR));
-                            },
-                            
-                          );
-                    },
+                return ListView.separated(
+                  //print a list view with all the data in the database
+                  separatorBuilder: (BuildContext context, int index) =>
+                      Divider(
+                    color: Color.fromARGB(255, 99, 0, 68),
+                    thickness: 10,
+                  ),
+                  itemCount: data.length,
+                  itemBuilder: (context, index) {
+                    final caloriesWS = data[index];
+                    return ListTile(
+                      //tileColor: Color(0xFFFFE082),
+                      style: ListTileStyle.list,
+                      leading: Text('${index + 1}',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 99, 0, 68),
+                              fontSize: 20)),
+                      title: Text(
+                          'From: ${caloriesWS.startDay.day}/${caloriesWS.startDay.month}/${caloriesWS.startDay.year} To: ${caloriesWS.lastDay.day}/${caloriesWS.startDay.month}/${caloriesWS.startDay.year}'),
+                      subtitle: (caloriesWS.activityCalories == null)
+                          ? const Text('No data avaiables')
+                          : ((caloriesWS.activityCalories! + measBMR) >
+                                  dietCalories)
+                              ? Text(
+                                  'Deficit of ${(caloriesWS.activityCalories! + measBMR - dietCalories).toInt()} kcal per day',
+                                  style: TextStyle(color: Colors.red))
+                              : Text(
+                                  'Surplus of ${(dietCalories - caloriesWS.activityCalories! - measBMR).toInt()} kcal per day',
+                                  style: TextStyle(color: Colors.green)),
+                      trailing: (index == data.length - 1)
+                          ? ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  primary: Color.fromARGB(255, 99, 0, 68)),
+                              onPressed: () async {
+                                final caloriesDayToDelete = await Provider.of<
+                                            DatabaseRepository>(context,
+                                        listen: false)
+                                    .findAllCaloriesDayOfAWeek(caloriesWS.id);
+                                for (var calDay in caloriesDayToDelete) {
+                                  await Provider.of<DatabaseRepository>(context,
+                                          listen: false)
+                                      .deleteCaloriesDay(calDay);
+                                }
+                                await Provider.of<DatabaseRepository>(context,
+                                        listen: false)
+                                    .removeCaloriesWS(caloriesWS);
+                              },
+                              child: const Icon(MdiIcons.delete))
+                          : Container(width: 0, height: 0),
+                      onTap: () {
+                        //navigates to caloriesdaypage send the number of the week we want to see more in detail
+                        Navigator.pushNamed(context, CaloriesDayPage.route,
+                            arguments: SendData(index, dietCalories, measBMR));
+                      },
+                    );
+                  },
                 );
-              }
-              else {
+              } else {
                 return const CircularProgressIndicator();
               }
-            },//builder of FutureBuilder
+            }, //builder of FutureBuilder
           );
         }),
       ),
     );
   } //build
 
-  double? _correctCalories(double? calories, double fitbitBMR){  //function that corrects the data retrived from fitbit
-    if(calories!=null){
+  double? _correctCalories(double? calories, double fitbitBMR) {
+    //function that corrects the data retrived from fitbit
+    if (calories != null) {
       double fitbitActivityCalories = calories - fitbitBMR;
-      double LB = fitbitActivityCalories/1.535;
-      double UB = fitbitActivityCalories/0.957;
-      return (UB+LB)/2;
-    }
-    else {
+      double LB = fitbitActivityCalories / 1.535;
+      double UB = fitbitActivityCalories / 0.957;
+      return (UB + LB) / 2;
+    } else {
       return null;
     }
   }
-
 } //CaloriesWSPage

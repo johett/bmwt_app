@@ -100,8 +100,10 @@ class _UserPage extends State<UserPage> {
                                 'Your BMI is: ${(weight! / (height! * height!) * 10000).toStringAsFixed(2)}.')
                             : Text('Insert height and Weight to see your BMI'),
                         ElevatedButton(
-                            onPressed: () => saveAndQuit(), child: Text("save"),
-                            style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)))
+                            onPressed: () => saveAndQuit(),
+                            child: Text("Save"),
+                            style: ElevatedButton.styleFrom(
+                                primary: Color.fromARGB(255, 99, 0, 68)))
                       ],
                     ),
                   ),

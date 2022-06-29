@@ -66,7 +66,7 @@ class _ChangeHeartGoalsState extends State<ChangeHeartGoals> {
                       child: Column(
                         children: [
                           NTile(
-                            text: 'calories',
+                            text: 'Calories',
                             control: calControl,
                           ),
                           NTile(
@@ -74,17 +74,18 @@ class _ChangeHeartGoalsState extends State<ChangeHeartGoals> {
                             control: cardioControl,
                           ),
                           NTile(
-                            text: 'peak minutes',
+                            text: 'Peak minutes',
                             control: peakControl,
                           ),
                           NTile(
-                            text: 'fat burning minutes',
+                            text: 'Fat burning minutes',
                             control: bFatControl,
                           ),
                           ElevatedButton(
                               onPressed: () => saveAndQuit(),
-                              style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)),
-                              child: Text("save and quit"))
+                              style: ElevatedButton.styleFrom(
+                                  primary: Color.fromARGB(255, 99, 0, 68)),
+                              child: Text("Save and quit"))
                         ],
                       ),
                     ),

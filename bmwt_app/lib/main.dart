@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color accent =
-        Color.fromARGB(255, 194, 221, 244); //Color.fromARGB(255, 2, 86, 152);
+        Color.fromARGB(255, 142, 195, 236); //Color.fromARGB(255, 2, 86, 152);
     Color base = Colors.white;
     Color darkBase = Color.fromARGB(255, 99, 0, 68);
     Color textColor = Color.fromARGB(255, 61, 58, 55);
@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: base,
         appBarTheme: AppBarTheme(
             color: darkBase,
-            titleTextStyle: TextStyle(color: accent, fontSize: 26)),
+            titleTextStyle: TextStyle(color: Colors.white, fontSize: 26)),
         iconTheme: IconThemeData(color: accent),
         textTheme: TextTheme(
             //Changes text data

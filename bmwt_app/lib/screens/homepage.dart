@@ -84,13 +84,22 @@ class HomePage extends StatelessWidget {
                                       fontSize: 36,
                                       color: Colors.white,
                                     )),
-                                Text('to ActiLife')
+                                Text('to ActiStep',
+                                    style: TextStyle(
+                                      fontSize: 36,
+                                      color: Colors.white,
+                                    )),
+                                Text('Your next step to a more active life',
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      color: Colors.white,
+                                    ))
                               ],
                             );
                           } else {
-                            return Text('Welcome back',
+                            return Text('Your next step to a more active life',
                                 style: TextStyle(
-                                  fontSize: 36,
+                                  fontSize: 25,
                                   color: Colors.white,
                                 ));
                           }
@@ -123,10 +132,6 @@ class HomePage extends StatelessWidget {
               label: 'Steps',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              label: 'Settings',
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.person),
               label: 'User',
             )
@@ -141,10 +146,8 @@ class HomePage extends StatelessWidget {
             if (index == 2) {
               Navigator.pushNamed(context, StepPage.route);
             }
+
             if (index == 3) {
-              Navigator.pushNamed(context, ChangeHeartGoals.route);
-            }
-            if (index == 4) {
               Navigator.pushNamed(context, UserPage.route);
             }
           }),

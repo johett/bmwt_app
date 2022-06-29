@@ -29,7 +29,7 @@ class HeartPage extends StatelessWidget {
         if (snapshot.hasData) {
           return Scaffold(
             appBar: AppBar(
-              title: Text('Today'),
+              title: Text("Today's heart status"),
             ),
             body: Row(
               children: [
@@ -109,7 +109,8 @@ class Page extends StatelessWidget {
                         onPressed: () {
                           Navigator.pushNamed(context, ChangeHeartGoals.route);
                         },
-                        style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)),
+                        style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 99, 0, 68)),
                         child: Text('Change goals'))
                   ],
                   crossAxisAlignment: CrossAxisAlignment.center,
