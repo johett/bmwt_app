@@ -7,7 +7,6 @@ import 'package:bmwt_app/screens/caloriesDaypage.dart';
 import 'package:bmwt_app/screens/heartpage.dart';
 import 'package:bmwt_app/screens/StepPage.dart';
 import 'package:bmwt_app/screens/function2page.dart';
-import 'package:bmwt_app/screens/HP3.dart';
 import 'package:bmwt_app/screens/lastWeekHeart.dart';
 import 'package:bmwt_app/screens/userPage.dart';
 import 'package:flutter/material.dart';
@@ -76,7 +75,6 @@ class MyApp extends StatelessWidget {
         HomePage.route: (context) => const HomePage(),
         CaloriesHomePage.route: (context) => const CaloriesHomePage(),
         HeartPage.route: (context) => HeartPage(),
-        HP3.route: (context) => HP3(),
         ChangeHeartGoals.route: (context) => ChangeHeartGoals(),
         LastWeekHeart.route: (context) => LastWeekHeart(),
         CaloriesWSPage.route: (context) => const CaloriesWSPage(),

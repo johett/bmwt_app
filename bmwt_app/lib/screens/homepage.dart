@@ -76,7 +76,7 @@ class HomePage extends StatelessWidget {
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           List<UserData> user = snapshot.data as List<UserData>;
-                          if (user.length != 0) {
+                          if (user.length != 0 && user[0].name != null) {
                             return Column(
                               children: [
                                 Text('Welcome back ${user[0].name}',

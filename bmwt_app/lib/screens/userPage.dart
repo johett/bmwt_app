@@ -23,12 +23,14 @@ class _UserPage extends State<UserPage> {
     super.initState();
   }
 
+//controllers
   final formKey = GlobalKey<FormState>();
   TextEditingController nameControl = TextEditingController();
   TextEditingController surnameControl = TextEditingController();
   TextEditingController heightControl = TextEditingController();
   TextEditingController weightControl = TextEditingController();
 
+//data
   String? name = null;
   String? surname = null;
   int? height = null;
@@ -46,12 +48,14 @@ class _UserPage extends State<UserPage> {
             child: Consumer<DatabaseRepository>(builder: (context, dbr, child) {
           return FutureBuilder(
               initialData: null,
+              //checks for user data in database
               future: dbr.getUserData(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final data = snapshot.data as List<UserData>;
                   if (data.length != 0) {
                     if (data[0].name != null) {
+                      // if data exists
                       name = data[0].name as String;
                     }
 
@@ -74,22 +78,23 @@ class _UserPage extends State<UserPage> {
                         NameTile(
                           text: 'Name',
                           control: nameControl,
-                          hint: name,
+                          hint:
+                              name != null ? name : '', // check for null values
                         ),
                         NameTile(
                           text: 'Surname',
                           control: surnameControl,
-                          hint: surname,
+                          hint: surname != null ? surname : '',
                         ),
                         NTile(
                           text: 'Height in cm',
                           control: heightControl,
-                          hint: height.toString(),
+                          hint: height != null ? height.toString() : '',
                         ),
                         NTile(
                           text: 'Weight in Kg',
                           control: weightControl,
-                          hint: weight.toString(),
+                          hint: weight != null ? weight.toString() : '',
                         ),
                         (height is int &&
                                 height != 0 &&
@@ -125,11 +130,12 @@ class _UserPage extends State<UserPage> {
 
   Future<void> saveAndQuit() async {
     bool error = false;
-    String pattern = r'^(\d*)$';
+    String pattern = r'^(\d*)$'; // checks for digits only
     RegExp regex = RegExp(pattern);
 
     if (nameControl.text != '') {
       name = nameControl.value.text;
+      //name and surname can have any characters
     }
 
     if (surnameControl.text != '') {
@@ -156,6 +162,7 @@ class _UserPage extends State<UserPage> {
           .insertUser(g);
     } else {
       showDialog(
+        // if error is true a show dialog is called
         context: context,
         builder: (context) => AlertDialog(
           title: Text(
@@ -201,7 +208,7 @@ class _NTile extends State<NTile> {
       padding: EdgeInsets.all(8),
       child: Column(
         children: [
-          Text(widget.text),
+          Text('${widget.text} : ${widget.hint}'),
           TextField(
             controller: widget.control,
             keyboardType: TextInputType.number,
@@ -237,7 +244,7 @@ class _NameTile extends State<NameTile> {
       padding: EdgeInsets.all(8),
       child: Column(
         children: [
-          Text(widget.text),
+          Text('${widget.text} : ${widget.hint}'),
           TextField(
             controller: widget.control,
             maxLength: 10,

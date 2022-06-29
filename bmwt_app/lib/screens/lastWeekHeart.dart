@@ -1,12 +1,7 @@
-import 'package:bmwt_app/repositories/databaseRepository.dart';
 import 'package:bmwt_app/utility/credentials.dart';
 import 'package:fitbitter/fitbitter.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:bmwt_app/database/entities/heart.dart';
-import 'package:bmwt_app/database/database.dart';
 
 class LastWeekHeart extends StatefulWidget {
   const LastWeekHeart({Key? key}) : super(key: key);
@@ -24,6 +19,7 @@ class _LastWeekHeart extends State<LastWeekHeart> {
     super.initState();
   }
 
+// body is managed by CardManager
   @override
   Widget build(BuildContext context) {
     print('${LastWeekHeart.routename} built');
@@ -41,6 +37,7 @@ class _LastWeekHeart extends State<LastWeekHeart> {
 
 }
 
+// manages the page
 class CardManager extends StatefulWidget {
   CardManager({Key? key}) : super(key: key);
   @override
@@ -66,7 +63,7 @@ class _CardManager extends State<CardManager> {
                     return new Scaffold(
                       body: SingleChildScrollView(
                         child: Column(children: [
-                          for (int i = 1; i < data!.length; i++)
+                          for (int i = 0; i < data!.length; i++)
                             HeartCard(data: data![i])
                         ]),
                       ),
@@ -79,6 +76,7 @@ class _CardManager extends State<CardManager> {
                 })));
   }
 
+// This function fetches data regarding previous week
   Future<List<FitbitHeartData>> getLastWeekHearts() async {
     FitbitHeartDataManager fitbitHeartDataManager = FitbitHeartDataManager(
       clientID: FitbitAppCredentials.clientID,
@@ -109,6 +107,7 @@ class _HeartCard extends State<HeartCard> {
     super.initState();
   }
 
+// This widget visualizes the data passed upon
   @override
   Widget build(BuildContext context) {
     body:

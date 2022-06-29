@@ -23,6 +23,7 @@ class HeartPage extends StatelessWidget {
     print('${HeartPage.routename} built');
     return Scaffold(
         body: Center(
+            //fetch heart Data
             child: FutureBuilder(
       future: getTodayHeart(),
       builder: (ctx, snapshot) {
@@ -33,12 +34,14 @@ class HeartPage extends StatelessWidget {
             ),
             body: Row(
               children: [
+                //Button to call Page regarding last week data
                 IconButton(
                   onPressed: () {
                     Navigator.pushNamed(context, LastWeekHeart.route);
                   },
                   icon: Icon(Icons.arrow_left_rounded),
                 ),
+                // Calling widget named Page
                 Expanded(
                   child: Page(snapshot.data as FitbitHeartData),
                   flex: 1,
@@ -54,8 +57,9 @@ class HeartPage extends StatelessWidget {
       },
     )));
   }
-  // functions
 
+  // functions
+//Function to get heart data
   Future<FitbitHeartData?> getTodayHeart() async {
     FitbitHeartDataManager fitbitHeartDataManager = FitbitHeartDataManager(
       clientID: FitbitAppCredentials.clientID,
@@ -85,6 +89,7 @@ class Page extends StatelessWidget {
     return Scaffold(
       body: Center(
           child: Consumer<DatabaseRepository>(builder: ((context, dbr, child) {
+        // Check for goals regarding the Heart
         return FutureBuilder(
             initialData: null,
             future: dbr.getHeartGoals(),
@@ -92,8 +97,10 @@ class Page extends StatelessWidget {
               if (snapshot.hasData && snapshot.data != null) {
                 var goals = snapshot.data as List<HeartGoals>;
                 if (goals.length == 0) {
+                  // If no heart  goals are present these are initialized(calories: 500, Minutes cardio:10, minutesPeak:10, minutes burning fat:10)
                   goals.add(HeartGoals(0, 500, 10, 10, 10));
                 }
+                //Page layout
                 return Column(
                   children: [
                     HeartRateWidget(h.restingHeartRate.toString()),
@@ -109,8 +116,6 @@ class Page extends StatelessWidget {
                         onPressed: () {
                           Navigator.pushNamed(context, ChangeHeartGoals.route);
                         },
-                        style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 99, 0, 68)),
                         child: Text('Change goals'))
                   ],
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -126,7 +131,9 @@ class Page extends StatelessWidget {
     );
   }
 }
+//*******************************************Widgets */
 
+//Creates heartrate at rest
 class HeartRateWidget extends StatelessWidget {
   final String hr;
 
@@ -162,13 +169,16 @@ class HeartRateWidget extends StatelessWidget {
   }
 }
 
+// creates minutes at cardio, values is passed onto by Page Widget, progress is visualized with linear progress indicator
 class MinutesCardioWidget extends StatelessWidget {
   final String minutesCardio;
   double progress = 0;
   int goal;
   MinutesCardioWidget(this.minutesCardio, this.goal) {
     progress = double.parse(minutesCardio);
-    progress = progress / goal;
+    (goal != 0)
+        ? progress = progress / goal
+        : progress = 1; // to avoid division by zero
     if (progress >= 1) {
       progress = 1;
     }
@@ -188,7 +198,7 @@ class MinutesCardioWidget extends StatelessWidget {
         child: LinearProgressIndicator(
           value: progress,
           color: progress == 1 ? Colors.green : Colors.amber,
-          backgroundColor: Colors.blueGrey,
+          backgroundColor: Theme.of(context).focusColor,
         ),
       )
     ]);
@@ -201,6 +211,7 @@ class CaloriesCardioWidget extends StatelessWidget {
   int goal;
   CaloriesCardioWidget(this.caloriesCardio, this.goal) {
     progress = double.parse(caloriesCardio);
+    (goal != 0) ? progress = progress / goal : progress = 1;
     progress = progress / goal;
     if (progress >= 1) {
       progress = 1;
@@ -235,6 +246,7 @@ class MinutesPeakWidget extends StatelessWidget {
   int goal;
   MinutesPeakWidget(this.minutesPeak, this.goal) {
     progress = double.parse(minutesPeak);
+    (goal != 0) ? progress = progress / goal : progress = 1;
     progress = progress / goal;
     if (progress >= 1) {
       progress = 1;
@@ -268,6 +280,7 @@ class MinutesFatBurnWidget extends StatelessWidget {
   int goal;
   MinutesFatBurnWidget(this.minutesFatBurn, this.goal) {
     progress = double.parse(minutesFatBurn);
+    (goal != 0) ? progress = progress / goal : progress = 1;
     progress = progress / goal;
     if (progress >= 1) {
       progress = 1;
