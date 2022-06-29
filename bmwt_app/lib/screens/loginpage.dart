@@ -57,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                   color: Color.fromARGB(255, 252, 252, 252),
               child: Column(
                 children: [
-                  Text('Welcome to BMWT Project App',style: TextStyle(fontSize: 20),),
+                  Text('Welcome to ActiLife',style: TextStyle(fontSize: 20),),
                   SizedBox(
                     height:20,
                   ),

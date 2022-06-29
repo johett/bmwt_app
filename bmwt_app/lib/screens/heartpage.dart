@@ -109,6 +109,7 @@ class Page extends StatelessWidget {
                         onPressed: () {
                           Navigator.pushNamed(context, ChangeHeartGoals.route);
                         },
+                        style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)),
                         child: Text('Change goals'))
                   ],
                   crossAxisAlignment: CrossAxisAlignment.center,

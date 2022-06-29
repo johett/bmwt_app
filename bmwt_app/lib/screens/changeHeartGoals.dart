@@ -83,6 +83,7 @@ class _ChangeHeartGoalsState extends State<ChangeHeartGoals> {
                           ),
                           ElevatedButton(
                               onPressed: () => saveAndQuit(),
+                              style: ElevatedButton.styleFrom(primary: Color.fromARGB(255, 99, 0, 68)),
                               child: Text("save and quit"))
                         ],
                       ),

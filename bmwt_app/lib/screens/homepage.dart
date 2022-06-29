@@ -77,11 +77,16 @@ class HomePage extends StatelessWidget {
                         if (snapshot.hasData) {
                           List<UserData> user = snapshot.data as List<UserData>;
                           if (user.length != 0) {
-                            return Text('Welcome back ${user[0].name}',
-                                style: TextStyle(
-                                  fontSize: 36,
-                                  color: Colors.white,
-                                ));
+                            return Column(
+                              children: [
+                                Text('Welcome back ${user[0].name}',
+                                    style: TextStyle(
+                                      fontSize: 36,
+                                      color: Colors.white,
+                                    )),
+                                Text('to ActiLife')
+                              ],
+                            );
                           } else {
                             return Text('Welcome back',
                                 style: TextStyle(
@@ -197,7 +202,8 @@ class HomePage extends StatelessWidget {
                                 for (var item in dataToDeleteDay) {
                                   await caloriesdayDao.deleteCaloriesDay(item);
                                 }
-
+                                Navigator.pop(context);
+                                Navigator.pop(context);
                                 Navigator.of(context)
                                     .pushReplacementNamed(LoginPage.route);
                               },
