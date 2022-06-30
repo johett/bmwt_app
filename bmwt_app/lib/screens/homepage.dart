@@ -55,7 +55,7 @@ class HomePage extends StatelessWidget {
                   if (snapshot.hasData) {
                     String batteryLevel = snapshot.data as String;
                     print(batteryLevel);
-                    return Text('Battery level: ${batteryLevel}',
+                    return Text('Fitbit battery level: ${batteryLevel}',
                         style: TextStyle(
                             fontSize: 14,
                             color: batteryLevel == 'Low'

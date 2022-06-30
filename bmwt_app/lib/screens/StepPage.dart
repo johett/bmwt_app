@@ -156,18 +156,21 @@ class StepPage extends State<StepsPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
-                          snapshot.data.toString().startsWith(" Hurray")
-                              ? Icons.verified_outlined
-                              : Icons.rocket_launch,
-                          color: snapshot.data.toString().startsWith(" Hurray")
-                              ? Color.fromARGB(255, 12, 138, 17)
-                              : Color.fromARGB(255, 164, 21, 10)),
+                        snapshot.data.toString().startsWith(" Hurray")
+                            ? Icons.verified_outlined
+                            : Icons.rocket_launch,
+                        color: snapshot.data.toString().startsWith(" Hurray")
+                            ? Color.fromARGB(255, 12, 138, 17)
+                            : Color.fromARGB(255, 164, 21, 10),
+                        size: 40,
+                      ),
                       Flexible(
                           child: Text(
                         '${snapshot.data}',
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.fade,
                         style: TextStyle(
+                            fontSize: 20,
                             color:
                                 snapshot.data.toString().startsWith(" Hurray")
                                     ? Color.fromARGB(255, 12, 138, 17)
